@@ -1,0 +1,14 @@
+# target directories
+core/target/
+test/target/
+data/target/
+rs/target/
+
+.idea
+*.iml
+*.ipr
+*.iws
+*.ids
+
+*.classpath
+*.project
