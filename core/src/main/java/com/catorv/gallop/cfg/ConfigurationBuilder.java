@@ -1,6 +1,6 @@
 package com.catorv.gallop.cfg;
 
-import com.catorv.gallop.util.Reflection;
+import com.catorv.gallop.util.ReflectUtils;
 import com.google.common.base.Strings;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -23,7 +23,7 @@ public class ConfigurationBuilder {
 	                         Properties properties) {
 		try {
 			result = (result == null ? resultType.newInstance() : result);
-			for (Field field : Reflection.getDeclaredFields(resultType)) {
+			for (Field field : ReflectUtils.getDeclaredFields(resultType)) {
 				Class<?> type = field.getType();
 
 				if (Modifier.isFinal(field.getModifiers())) {

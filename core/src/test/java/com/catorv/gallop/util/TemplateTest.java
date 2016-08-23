@@ -14,7 +14,7 @@ public class TemplateTest {
 	@Test
 	public void test() {
 		String template = "Create by {author} on {date}.";
-		String result = Template.getTemplate(template).evaluate("author", "cator");
+		String result = Template.of(template).evaluate("author", "cator");
 
 		Assert.assertEquals(result, "Create by cator on {date}.");
 	}

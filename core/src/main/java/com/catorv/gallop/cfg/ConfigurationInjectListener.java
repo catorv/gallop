@@ -1,6 +1,6 @@
 package com.catorv.gallop.cfg;
 
-import com.catorv.gallop.util.Reflection;
+import com.catorv.gallop.util.ReflectUtils;
 import com.google.common.base.Strings;
 import com.google.inject.TypeLiteral;
 import com.google.inject.spi.TypeEncounter;
@@ -30,7 +30,7 @@ class ConfigurationInjectListener implements TypeListener {
 				String section = getSection(annotation);
 				encounter.register(new ConfigurationInjector<I>(null, section, properties));
 			}
-			for (Field field : Reflection.getDeclaredFields(clazz)) {
+			for (Field field : ReflectUtils.getDeclaredFields(clazz)) {
 				if (field.isAnnotationPresent(Configuration.class)) {
 					Configuration annotation = field.getAnnotation(Configuration.class);
 					String section = getSection(annotation);

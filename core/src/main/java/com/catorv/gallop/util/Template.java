@@ -23,7 +23,7 @@ public class Template {
 	private static Cache<String, Template> cache = CacheBuilder
 			.newBuilder().maximumSize(1024).build();
 
-	public static Template getTemplate(String template) {
+	public static Template of(String template) {
 		String key = DigestUtils.md5(template);
 		Template tpl = cache.getIfPresent(key);
 		if (tpl == null) {
@@ -39,7 +39,7 @@ public class Template {
 
 	private List<CompiledUnit> compile(String template) {
 //		template = template.trim();
-		List<CompiledUnit> parts = new ArrayList<CompiledUnit>();
+		List<CompiledUnit> parts = new ArrayList<>();
 		char[] chars = template.toCharArray();
 		int state = 0;
 		int pos = 0;

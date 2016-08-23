@@ -10,7 +10,7 @@ import java.util.List;
  * 对象反射
  * Created by cator on 6/21/16.
  */
-public class Reflection {
+public class ReflectUtils {
 
 	private static final String MODIFIERS_FIELD = "modifiers";
 

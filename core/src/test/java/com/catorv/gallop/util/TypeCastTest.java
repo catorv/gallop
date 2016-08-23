@@ -80,4 +80,18 @@ public class TypeCastTest {
 		Assert.assertEquals(TypeCast.stringOf(true), "true");
 	}
 
+	@Test
+	public void testObjectOf() {
+		Date date = new Date();
+		String string = "String";
+		String nullString = null;
+
+		Assert.assertNull(TypeCast.objectOf(String.class, date));
+		Assert.assertNull(TypeCast.objectOf(String.class, nullString));
+
+		Assert.assertNotNull(TypeCast.objectOf(String.class, string));
+		Assert.assertNotNull(TypeCast.objectOf(CharSequence.class, string));
+		Assert.assertNotNull(TypeCast.objectOf(Date.class, date));
+	}
+
 }

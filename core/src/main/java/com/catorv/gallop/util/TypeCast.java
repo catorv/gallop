@@ -101,4 +101,15 @@ public class TypeCast {
 		return object.toString();
 	}
 
+	public static <T> T objectOf(Class<? extends T> type, Object object) {
+		if (object == null || !type.isInstance(object)) {
+			return null;
+		}
+		try {
+			return type.cast(object);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
 }
