@@ -7,7 +7,7 @@
     <groupId>com.catorv.gallop</groupId>
     <artifactId>gallop</artifactId>
     <packaging>pom</packaging>
-    <version>${gallop.version}</version>
+    <version>0.1</version>
 
     <name>com.catorv.gallop</name>
     <url>http://catorv.com</url>
@@ -90,7 +90,6 @@
     </dependencies>
 
     <build>
-        <finalName>gallop-${project.artifactId}-${project.version}</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>

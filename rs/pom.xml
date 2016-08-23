@@ -4,12 +4,12 @@
     <parent>
         <artifactId>gallop</artifactId>
         <groupId>com.catorv.gallop</groupId>
-        <version>${gallop.version}</version>
+        <version>0.1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>rs</artifactId>
+    <artifactId>gallop-rs</artifactId>
     <packaging>jar</packaging>
 
     <name>com.catorv.gallop.rs</name>
@@ -30,7 +30,7 @@
     <dependencies>
         <dependency>
             <groupId>com.catorv.gallop</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>gallop-core</artifactId>
             <version>${gallop.version}</version>
         </dependency>
         <dependency>
@@ -78,7 +78,7 @@
 
         <dependency>
             <groupId>com.catorv.gallop</groupId>
-            <artifactId>test</artifactId>
+            <artifactId>gallop-test</artifactId>
             <version>${gallop.version}</version>
             <scope>test</scope>
         </dependency>
