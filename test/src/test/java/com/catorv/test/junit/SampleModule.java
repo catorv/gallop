@@ -10,7 +10,7 @@ import java.util.Map;
  * 例子模块(测试用例)
  * Created by cator on 6/20/16.
  */
-class SampleModule extends AbstractModule {
+public class SampleModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
