@@ -2,17 +2,23 @@ package com.catorv.gallop.httpclient;
 
 import com.google.inject.Inject;
 import org.apache.http.*;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import java.io.File;
@@ -22,10 +28,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * HttpClient Executor
@@ -41,6 +44,7 @@ public class HttpClientExecutor {
 
 	private String url;
 	private HttpRequestBase request;
+	private HttpContext context;
 
 	private Charset charset = Charset.defaultCharset();
 
@@ -79,6 +83,7 @@ public class HttpClientExecutor {
 	private Builder getBuilder(String url, HttpRequestBase request) throws URISyntaxException {
 		this.url = url;
 		this.request = request;
+		this.context = new BasicHttpContext();
 		return new Builder(this);
 	}
 
@@ -98,7 +103,7 @@ public class HttpClientExecutor {
 				r.setEntity(multipartBody.build());
 			}
 		}
-		return new Response(httpClient.execute(request));
+		return new Response(httpClient.execute(request, context));
 	}
 
 	/**
@@ -109,10 +114,13 @@ public class HttpClientExecutor {
 		private HttpClientExecutor executor;
 		private URIBuilder uriBuilder;
 		private RequestConfig.Builder requestConfigBuilder;
+		private CookieStore cookieStore;
+		private boolean cookieSet = false;
 
 		public Builder(HttpClientExecutor executor) throws URISyntaxException {
 			this.executor = executor;
 			uriBuilder = new URIBuilder(executor.url);
+			cookieStore = new BasicCookieStore();
 		}
 
 		private RequestConfig.Builder getRequestConfigBuilder() {
@@ -144,6 +152,34 @@ public class HttpClientExecutor {
 				}
 			}
 			return this;
+		}
+
+		public Builder cookie(String name, String value, String path,
+		                      Date expiryDate, boolean secure) {
+			BasicClientCookie cookie = new BasicClientCookie(name, value);
+			if (path != null) {
+				cookie.setPath(path);
+			}
+			if (expiryDate != null) {
+				cookie.setExpiryDate(expiryDate);
+			}
+			cookie.setSecure(secure);
+			cookieStore.addCookie(cookie);
+			cookieSet = true;
+			return this;
+		}
+
+		public Builder cookie(String name, String value, String path,
+		                      Date expiryDate) {
+			return cookie(name, value, path, expiryDate, false);
+		}
+
+		public Builder cookie(String name, String value, String path) {
+			return cookie(name, value, path, null, false);
+		}
+
+		public Builder cookie(String name, String value) {
+			return cookie(name, value, null, null, false);
 		}
 
 		public Builder contentType(String contentType) {
@@ -312,6 +348,10 @@ public class HttpClientExecutor {
 
 			if (requestConfigBuilder != null) {
 				executor.request.setConfig(requestConfigBuilder.build());
+			}
+
+			if (cookieSet) {
+				executor.context.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
 			}
 
 			return executor;
