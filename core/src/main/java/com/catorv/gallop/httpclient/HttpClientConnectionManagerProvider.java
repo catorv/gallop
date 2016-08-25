@@ -44,8 +44,8 @@ public class HttpClientConnectionManagerProvider implements Provider<HttpClientC
 				if (max <= 0) {
 					continue;
 				}
-				String hostname = s.substring(0, pos);
-				HttpHost host = HttpHost.create(hostname);
+				final String hostname = s.substring(0, pos);
+				final HttpHost host = HttpHost.create(hostname);
 				cm.setMaxPerRoute(new HttpRoute(host), max);
 			}
 		}

@@ -347,7 +347,9 @@ public class HttpClientExecutor {
 		}
 
 		public HttpClientExecutor build() throws URISyntaxException {
-			executor.request.setURI(uriBuilder.setCharset(executor.charset).build());
+			final HttpRequestBase request = executor.request;
+
+			request.setURI(uriBuilder.setCharset(executor.charset).build());
 			if (executor.stringBody == null) {
 				if (executor.formBody != null) {
 					formUrlencoded();
@@ -357,11 +359,12 @@ public class HttpClientExecutor {
 			}
 
 			if (requestConfigBuilder != null) {
-				executor.request.setConfig(requestConfigBuilder.build());
+				request.setConfig(requestConfigBuilder.build());
 			}
 
 			if (cookieSet) {
-				executor.context.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+				final HttpContext context = executor.context;
+				context.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
 			}
 
 			return executor;
