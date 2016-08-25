@@ -1,6 +1,7 @@
 package com.catorv.gallop.lifecycle;
 
 import com.google.inject.Singleton;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,8 @@ public class ShutdownHook {
 
 	private synchronized static void callMethod(MethodInvocation mi) {
 		try {
-			System.out.println("[INFO] shutdown hook invoke : " + mi.getMethod());
+			Logger logger = org.slf4j.LoggerFactory.getLogger(ShutdownHook.class);
+			logger.info("call method: {}", mi.getMethod());
 			mi.proceed();
 		} catch (Throwable e) {
 			e.printStackTrace();

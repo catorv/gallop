@@ -3,6 +3,8 @@ package com.catorv.gallop.cfg;
 import com.google.common.base.Strings;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -19,6 +21,8 @@ class ConfigurationLoader {
 
 	private URL url;
 	private Properties properties;
+
+	private Logger logger;
 
 	ConfigurationLoader() {
 		String configFile = System.getProperty("config");
@@ -38,6 +42,8 @@ class ConfigurationLoader {
 		}
 
 		properties = new Properties();
+
+		logger = LoggerFactory.getLogger(getClass());
 	}
 
 	Properties load(String name) {
@@ -65,8 +71,8 @@ class ConfigurationLoader {
 
 		File file = new File(filename);
 		if (file.exists()) {
-			System.out.println("[INFO] load config from " + filename +
-					" for " + (name == null ? "default" : name));
+			logger.info("load config from {} for {}",
+					filename, (name == null ? "default" : name));
 
 			Properties namedProperties = new Properties();
 			try (InputStream is = new FileInputStream(file)) {
