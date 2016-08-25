@@ -154,32 +154,42 @@ public class HttpClientExecutor {
 			return this;
 		}
 
-		public Builder cookie(String name, String value, String path,
-		                      Date expiryDate, boolean secure) {
+		public Builder cookie(String name, String value, Date expiryDate,
+		                      String path, String domain, Boolean secure) {
 			BasicClientCookie cookie = new BasicClientCookie(name, value);
 			if (path != null) {
 				cookie.setPath(path);
 			}
+			if (domain != null) {
+				cookie.setDomain(domain);
+			}
 			if (expiryDate != null) {
 				cookie.setExpiryDate(expiryDate);
 			}
-			cookie.setSecure(secure);
+			if (secure != null) {
+				cookie.setSecure(secure);
+			}
 			cookieStore.addCookie(cookie);
 			cookieSet = true;
 			return this;
 		}
 
-		public Builder cookie(String name, String value, String path,
-		                      Date expiryDate) {
-			return cookie(name, value, path, expiryDate, false);
+		public Builder cookie(String name, String value, Date expiryDate,
+		                      String path, String domain) {
+			return cookie(name, value, expiryDate, path, domain, null);
 		}
 
-		public Builder cookie(String name, String value, String path) {
-			return cookie(name, value, path, null, false);
+		public Builder cookie(String name, String value, Date expiryDate,
+		                      String path) {
+			return cookie(name, value, expiryDate, path, null, null);
+		}
+
+		public Builder cookie(String name, String value, Date expiryDate) {
+			return cookie(name, value, expiryDate, null, null, null);
 		}
 
 		public Builder cookie(String name, String value) {
-			return cookie(name, value, null, null, false);
+			return cookie(name, value, null, null, null, false);
 		}
 
 		public Builder contentType(String contentType) {
