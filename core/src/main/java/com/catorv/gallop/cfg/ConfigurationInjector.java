@@ -39,21 +39,22 @@ class ConfigurationInjector<T> implements MembersInjector<T> {
 	@Override
 	public void injectMembers(T ins) {
 		if (field == null) {
-			builder.buildConfiguration((Class<T>) ins.getClass(), ins, section, properties);
+			builder.build((Class<T>) ins.getClass(), ins, section, properties);
 		} else {
 			field.setAccessible(true);
 			try {
 				Class<T> type = (Class<T>) field.getType();
 				if (type.isArray()) {
-					field.set(ins, builder.buildArrayConfiguration(type.getComponentType(), section, properties));
+					final Class<?> componentType = type.getComponentType();
+					field.set(ins, builder.buildArray(componentType, section, properties));
 				} else if (Map.class.isAssignableFrom(type)) {
 					if (groupType == Object.class) {
-						field.set(ins, builder.buildHashMapConfiguration(section, properties));
+						field.set(ins, builder.buildHashMap(section, properties));
 					} else {
-						field.set(ins, builder.buildGroupedConfiguration(groupType, null, section, properties));
+						field.set(ins, builder.buildGrouped(groupType, null, section, properties));
 					}
 				} else {
-					field.set(ins, builder.buildConfiguration(type, null, section, properties));
+					field.set(ins, builder.build(type, null, section, properties));
 				}
 			} catch (IllegalAccessException e) {
 				throw new RuntimeException(e);

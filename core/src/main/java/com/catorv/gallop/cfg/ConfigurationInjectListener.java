@@ -26,15 +26,16 @@ class ConfigurationInjectListener implements TypeListener {
 		Class<?> clazz = type.getRawType();
 		while (clazz != null && clazz != Object.class) {
 			if (clazz.isAnnotationPresent(Configuration.class)) {
-				Configuration annotation = clazz.getAnnotation(Configuration.class);
-				String section = getSection(annotation);
+				final Configuration annotation = clazz.getAnnotation(Configuration.class);
+				final String section = getSection(annotation);
 				encounter.register(new ConfigurationInjector<I>(null, section, properties));
 			}
 			for (Field field : ReflectUtils.getDeclaredFields(clazz)) {
 				if (field.isAnnotationPresent(Configuration.class)) {
-					Configuration annotation = field.getAnnotation(Configuration.class);
-					String section = getSection(annotation);
-					encounter.register(new ConfigurationInjector<I>(field, section, properties, annotation.groupType()));
+					final Configuration annotation = field.getAnnotation(Configuration.class);
+					final String section = getSection(annotation);
+					final Class<?> groupType = annotation.groupType();
+					encounter.register(new ConfigurationInjector<I>(field, section, properties, groupType));
 				}
 			}
 			clazz = clazz.getSuperclass();

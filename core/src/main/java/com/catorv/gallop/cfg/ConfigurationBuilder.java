@@ -2,6 +2,7 @@ package com.catorv.gallop.cfg;
 
 import com.catorv.gallop.util.ReflectUtils;
 import com.google.common.base.Strings;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
@@ -17,10 +18,20 @@ import java.util.*;
 @Singleton
 public class ConfigurationBuilder {
 
+	@Inject
+	private Properties properties;
+
 	private ConfigurationValueConverter converter = new ConfigurationValueConverter();
 
-	public <T> T buildConfiguration(Class<T> resultType, T result, String section,
-	                         Properties properties) {
+	public <T> T build(String section, Class<T> resultType) {
+		if (properties == null) {
+			throw new IllegalArgumentException("properties is null.");
+		}
+		return build(resultType, null, section, properties);
+	}
+
+	public <T> T build(Class<T> resultType, T result, String section,
+	                   Properties properties) {
 		try {
 			result = (result == null ? resultType.newInstance() : result);
 			for (Field field : ReflectUtils.getDeclaredFields(resultType)) {
@@ -30,9 +41,10 @@ public class ConfigurationBuilder {
 					continue;
 				}
 
+				final String key = section + "." + getFieldName(field);
+
 				if (type.isArray()) {
-					Object value = buildArrayConfiguration(type.getComponentType(),
-							section + "." + getFieldName(field), properties);
+					Object value = buildArray(type.getComponentType(), key, properties);
 					field.setAccessible(true);
 					field.set(result, value);
 					continue;
@@ -43,7 +55,7 @@ public class ConfigurationBuilder {
 				}
 
 				field.setAccessible(true);
-				String stringValue = properties.getProperty(section + "." + getFieldName(field));
+				String stringValue = properties.getProperty(key);
 				Object value = converter.fromString(stringValue , type);
 				if (value == null) {
 					continue;
@@ -57,8 +69,8 @@ public class ConfigurationBuilder {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T[] buildArrayConfiguration(Class<T> componentType,
-	                                String section, Properties properties) {
+	<T> T[] buildArray(Class<T> componentType, String section,
+	                   Properties properties) {
 		String stringValue = properties.getProperty(section);
 		if (Strings.isNullOrEmpty(stringValue)) {
 			return null;
@@ -77,11 +89,10 @@ public class ConfigurationBuilder {
 		return result;
 	}
 
-	public Map<String, String> buildHashMapConfiguration(String section, Properties properties) {
+	Map<String, String> buildHashMap(String section, Properties properties) {
 		Map<String, String> result = new HashMap<>();
 		section = section + ".";
-		Set<Object> keys = properties.keySet();
-		for (Object key : keys) {
+		for (Object key : properties.keySet()) {
 			String k = key.toString();
 			if (k.startsWith(section)) {
 				result.put(k.substring(section.length()), properties.getProperty(k));
@@ -90,8 +101,8 @@ public class ConfigurationBuilder {
 		return result;
 	}
 
-	public <T> Map<String, T> buildGroupedConfiguration(Class<T> groupType, Map<String, T> result,
-	                                             String section, Properties properties) {
+	<T> Map<String, T> buildGrouped(Class<T> groupType, Map<String, T> result,
+	                                String section, Properties properties) {
 		if (result == null) {
 			result = new HashMap<>();
 		}
@@ -111,7 +122,7 @@ public class ConfigurationBuilder {
 		}
 
 		for (String group : groups) {
-			result.put(group, buildConfiguration(groupType, null, section + group, properties));
+			result.put(group, build(groupType, null, section + group, properties));
 		}
 
 		return result;

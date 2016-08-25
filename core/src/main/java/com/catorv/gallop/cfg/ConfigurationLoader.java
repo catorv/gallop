@@ -15,6 +15,7 @@ import java.util.Properties;
 class ConfigurationLoader {
 
 	private static final String DEFAULT_FILENAME = "config.properties";
+	private static final String GLOBAL_NAME = "global";
 
 	private URL url;
 	private Properties properties;
@@ -47,8 +48,8 @@ class ConfigurationLoader {
 				loadConfig(name);
 			}
 
-			if (name == null || !name.equals("test")) {
-				loadConfig("test");
+			if (name == null || !name.equals(GLOBAL_NAME)) {
+				loadConfig(GLOBAL_NAME);
 			}
 		}
 

@@ -67,7 +67,7 @@ public class CloseableHttpClientProvider implements Provider<CloseableHttpClient
 				if (duration <= 0) {
 					continue;
 				}
-				String hostname = s.substring(0, pos);
+				final String hostname = s.substring(0, pos);
 				keepAliveDurationMap.put(hostname.toLowerCase(), duration);
 			}
 		}
@@ -80,8 +80,8 @@ public class CloseableHttpClientProvider implements Provider<CloseableHttpClient
 							response.headerIterator(HTTP.CONN_KEEP_ALIVE));
 					while (it.hasNext()) {
 						HeaderElement he = it.nextElement();
-						String param = he.getName();
-						String value = he.getValue();
+						final String param = he.getName();
+						final String value = he.getValue();
 						if (value != null && param.equalsIgnoreCase("timeout")) {
 							try {
 								return Long.parseLong(value) * 1000;
@@ -89,9 +89,10 @@ public class CloseableHttpClientProvider implements Provider<CloseableHttpClient
 							}
 						}
 					}
-					HttpHost target = (HttpHost) context.getAttribute(
+					final HttpHost target = (HttpHost) context.getAttribute(
 							HttpClientContext.HTTP_TARGET_HOST);
-					Long duration = keepAliveDurationMap.get(target.getHostName().toLowerCase());
+					final String hostName = target.getHostName().toLowerCase();
+					final Long duration = keepAliveDurationMap.get(hostName);
 					return duration != null ? duration : defaultKeepAliveDuration;
 				}
 
@@ -99,12 +100,12 @@ public class CloseableHttpClientProvider implements Provider<CloseableHttpClient
 			builder.setKeepAliveStrategy(ckaStrategy);
 		}
 
-		String proxy = config.getClientProxy();
+		final String proxy = config.getClientProxy();
 		if (!Strings.isNullOrEmpty(proxy)) {
 			builder.setProxy(new HttpHost(proxy));
 		}
 
-		String cookieStoreClass = config.getClientCookieStoreClass();
+		final String cookieStoreClass = config.getClientCookieStoreClass();
 		if (!Strings.isNullOrEmpty(cookieStoreClass)) {
 			try {
 				@SuppressWarnings("unchecked")
@@ -116,7 +117,7 @@ public class CloseableHttpClientProvider implements Provider<CloseableHttpClient
 			}
 		}
 
-		String credentialsProviderClass = config.getClientCredentialsProviderClass();
+		final String credentialsProviderClass = config.getClientCredentialsProviderClass();
 		if (!Strings.isNullOrEmpty(credentialsProviderClass)) {
 			try {
 				@SuppressWarnings("unchecked")

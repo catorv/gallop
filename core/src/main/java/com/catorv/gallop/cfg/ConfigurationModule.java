@@ -27,17 +27,6 @@ public class ConfigurationModule extends AbstractNamedModule {
 		super(name);
 	}
 
-	public static Properties getProperties(String name) {
-		if (Strings.isNullOrEmpty(name)) {
-			name = DEFAULT_KEY;
-		}
-		Properties properties = propertiesMap.get(name);
-		if (properties == null && !DEFAULT_KEY.equals(name)) {
-			properties = propertiesMap.get(DEFAULT_KEY);
-		}
-		return properties;
-	}
-
 	@Override
 	protected void configure() {
 		Properties properties = new ConfigurationLoader().load(name);
@@ -54,6 +43,17 @@ public class ConfigurationModule extends AbstractNamedModule {
 		Names.bindProperties(binder(), System.getProperties());
 
 		bindConstant().annotatedWith(Namespace.class).to(name == null ? "" : name);
+	}
+
+	public static Properties getProperties(String name) {
+		if (Strings.isNullOrEmpty(name)) {
+			name = DEFAULT_KEY;
+		}
+		Properties properties = propertiesMap.get(name);
+		if (properties == null && !DEFAULT_KEY.equals(name)) {
+			properties = propertiesMap.get(DEFAULT_KEY);
+		}
+		return properties;
 	}
 
 }
