@@ -2,9 +2,11 @@ package com.catorv.gallop.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 对象反射
@@ -14,17 +16,33 @@ public class ReflectUtils {
 
 	private static final String MODIFIERS_FIELD = "modifiers";
 
-	public static List<Field> getDeclaredFields(Class<?> type) {
+	public static List<Field> getDeclaredFields(Class<?> clazz) {
 		List<Field> fields = new ArrayList<>();
-		collectDeclaredFields(type, fields);
+		collectDeclaredFields(clazz, fields);
 		return fields;
 	}
 
-	private static void collectDeclaredFields(Class<?> type, List<Field> fields) {
-		if (type.getSuperclass() != null) {
-			collectDeclaredFields(type.getSuperclass(), fields);
+	private static void collectDeclaredFields(Class<?> clazz, List<Field> fields) {
+		if (clazz.getSuperclass() != null) {
+			collectDeclaredFields(clazz.getSuperclass(), fields);
 		}
-		Collections.addAll(fields, type.getDeclaredFields());
+		for (Field field : clazz.getDeclaredFields()) {
+			if (field.getName().indexOf('$') < 0) {
+				fields.add(field);
+			}
+		}
+	}
+
+	public static Field getDeclaredField(Class<?> clazz, String name) {
+		for (Field field : clazz.getDeclaredFields()) {
+			if (field.getName().equals(name)) {
+				return field;
+			}
+		}
+		if (clazz.getSuperclass() != null) {
+			return getDeclaredField(clazz.getSuperclass(), name);
+		}
+		return null;
 	}
 
 	public static void set(Field field, Object instance, Object value)
@@ -49,6 +67,35 @@ public class ReflectUtils {
 		Field field = Field.class.getDeclaredField(MODIFIERS_FIELD);
 		field.setAccessible(true);
 		field.setInt(dst, modifiers);
+	}
+
+	public static String getTypeName(Type type) {
+		if (type instanceof Class) {
+			return ((Class) type).getCanonicalName();
+		}
+		return type.toString();
+	}
+
+	public static void copyValueOfFields(Object src, Object dest)
+			throws IllegalAccessException {
+		Map<String, Field> srcFieldMap = new HashMap<>();
+		for (Field field : getDeclaredFields(src.getClass())) {
+			final String key = field.getName();
+			srcFieldMap.put(key, field);
+		}
+
+		for (Field field : getDeclaredFields(dest.getClass())) {
+			final String key = field.getName();
+			if (srcFieldMap.containsKey(key)) {
+				Field srcField = srcFieldMap.get(key);
+				if (field.getType().isAssignableFrom(srcField.getType())) {
+					srcField.setAccessible(true);
+					field.setAccessible(true);
+					final Object value = srcField.get(src);
+					field.set(dest, value);
+				}
+			}
+		}
 	}
 
 }
