@@ -54,7 +54,7 @@ public class ReflectUtilsTest {
 		ClassB object1 = getTestObject();
 		ClassB object2 = new ClassB();
 
-		ReflectUtils.copyValueOfFields(object1, object2);
+		ReflectUtils.copy(object1, object2);
 
 		assertNotNull(object2.getaIntField());
 		assertEquals(object1.getaIntField(), object2.getaIntField());
@@ -80,7 +80,7 @@ public class ReflectUtilsTest {
 		ClassB object = getTestObject();
 		ClassOther objectOther = new ClassOther();
 
-		ReflectUtils.copyValueOfFields(object, objectOther);
+		ReflectUtils.copy(object, objectOther);
 
 		assertNotNull(objectOther.getaIntField());
 		assertEquals(object.getaIntField(), objectOther.getaIntField());

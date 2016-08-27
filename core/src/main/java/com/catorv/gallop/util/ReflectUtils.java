@@ -76,23 +76,21 @@ public class ReflectUtils {
 		return type.toString();
 	}
 
-	public static void copyValueOfFields(Object src, Object dest)
+	public static void copy(Object src, Object dest)
 			throws IllegalAccessException {
 		Map<String, Field> srcFieldMap = new HashMap<>();
 		for (Field field : getDeclaredFields(src.getClass())) {
-			final String key = field.getName();
-			srcFieldMap.put(key, field);
+			srcFieldMap.put(field.getName(), field);
 		}
 
-		for (Field field : getDeclaredFields(dest.getClass())) {
-			final String key = field.getName();
+		for (Field destField : getDeclaredFields(dest.getClass())) {
+			final String key = destField.getName();
 			if (srcFieldMap.containsKey(key)) {
 				Field srcField = srcFieldMap.get(key);
-				if (field.getType().isAssignableFrom(srcField.getType())) {
+				if (destField.getType().isAssignableFrom(srcField.getType())) {
 					srcField.setAccessible(true);
-					field.setAccessible(true);
-					final Object value = srcField.get(src);
-					field.set(dest, value);
+					destField.setAccessible(true);
+					destField.set(dest, srcField.get(src));
 				}
 			}
 		}
