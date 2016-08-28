@@ -3,16 +3,15 @@ package com.catorv.gallop.database.entity;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
 
 /**
  * Abstract Assigned Id Entity
  * Created by cator on 8/11/16.
  */
 @MappedSuperclass
-public class AbstractAssignedIdEntity implements Serializable {
+public class AbstractAssignedIdEntity implements Entity {
 
-	private static final long serialVersionUID = 1509338276241422222L;
+	private static final long serialVersionUID = -2649356894400720813L;
 
 	@Id
 	@Column(length = 64)

@@ -9,7 +9,8 @@
     <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <!-- JPA entities must be registered here -->
-        <!--<class>com.dooreme.fnd.jpa.ExampleEntity</class>-->
+        <class>com.catorv.test.gallop.database.ExampleEntity</class>
+        <class>com.catorv.test.gallop.database.entity.ExampleAbstractEntity</class>
 
         <properties>
             <!-- vendor-specific properties go here -->

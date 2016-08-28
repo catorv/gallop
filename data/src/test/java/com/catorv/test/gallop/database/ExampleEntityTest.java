@@ -23,7 +23,7 @@ import java.util.List;
 public class ExampleEntityTest {
 
 	@Inject
-	private ExampleEntityDAO dao;
+	private ExampleDAO dao;
 
 	@Before
 	@Transactional

@@ -13,9 +13,9 @@ import java.util.List;
 
 @Singleton
 @Transactional
-public class ExampleEntityDAO extends EntityDAO<ExampleEntity> {
+public class ExampleDAO extends EntityDAO<ExampleEntity> {
 
-	public ExampleEntityDAO() {
+	public ExampleDAO() {
 		super(ExampleEntity.class);
 	}
 

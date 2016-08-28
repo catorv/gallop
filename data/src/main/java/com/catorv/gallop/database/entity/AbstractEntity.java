@@ -2,17 +2,19 @@ package com.catorv.gallop.database.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 /**
  * Abstract Entity
  * Created by cator on 8/11/16.
  */
 @MappedSuperclass
-public class AbstractEntity implements Serializable {
+public class AbstractEntity implements Entity {
 
-	private static final long serialVersionUID = 5985281261098463037L;
+	private static final long serialVersionUID = 9005668154934951558L;
 
 	@Id
 	@GeneratedValue(generator = "generator")
