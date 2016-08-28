@@ -11,10 +11,6 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class Model<E extends Entity> {
 
-	private Model() {
-		// nothing
-	}
-
 	public Model(E entity) {
 		try {
 			ReflectUtils.copy(entity, this);

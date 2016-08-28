@@ -154,6 +154,20 @@ public class HttpClientExecutor {
 			return this;
 		}
 
+		public Builder cookies(Collection<BasicClientCookie> cookies) {
+			for (BasicClientCookie cookie : cookies) {
+				cookieStore.addCookie(cookie);
+			}
+			cookieSet = true;
+			return this;
+		}
+
+		public Builder cookie(BasicClientCookie cookie) {
+			cookieStore.addCookie(cookie);
+			cookieSet = true;
+			return this;
+		}
+
 		public Builder cookie(String name, String value, Date expiryDate,
 		                      String path, String domain, Boolean secure) {
 			BasicClientCookie cookie = new BasicClientCookie(name, value);
@@ -169,9 +183,7 @@ public class HttpClientExecutor {
 			if (secure != null) {
 				cookie.setSecure(secure);
 			}
-			cookieStore.addCookie(cookie);
-			cookieSet = true;
-			return this;
+			return cookie(cookie);
 		}
 
 		public Builder cookie(String name, String value, Date expiryDate,

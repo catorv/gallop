@@ -54,50 +54,9 @@ public class CloseableHttpClientProvider implements Provider<CloseableHttpClient
 
 		HttpClientBuilder builder = HttpClients.custom().setConnectionManager(cm);
 
-		final Long defaultKeepAliveDuration = config.getClientDefaultKeepAliveDuration();
-		final Map<String, Long> keepAliveDurationMap = new HashMap<>();
-		String[] keepAliveDuration = config.getClientKeepAliveDuration();
-		if (keepAliveDuration != null) {
-			for (String s : keepAliveDuration) {
-				int pos = s.lastIndexOf('#');
-				if (pos < 0) {
-					continue;
-				}
-				Long duration = TypeCast.longOf(s.substring(pos + 1));
-				if (duration <= 0) {
-					continue;
-				}
-				final String hostname = s.substring(0, pos);
-				keepAliveDurationMap.put(hostname.toLowerCase(), duration);
-			}
-		}
-		if (defaultKeepAliveDuration != null) {
-			ConnectionKeepAliveStrategy ckaStrategy = new ConnectionKeepAliveStrategy() {
-
-				public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
-					// Honor 'keep-alive' header
-					HeaderElementIterator it = new BasicHeaderElementIterator(
-							response.headerIterator(HTTP.CONN_KEEP_ALIVE));
-					while (it.hasNext()) {
-						HeaderElement he = it.nextElement();
-						final String param = he.getName();
-						final String value = he.getValue();
-						if (value != null && param.equalsIgnoreCase("timeout")) {
-							try {
-								return Long.parseLong(value) * 1000;
-							} catch (NumberFormatException ignore) {
-							}
-						}
-					}
-					final HttpHost target = (HttpHost) context.getAttribute(
-							HttpClientContext.HTTP_TARGET_HOST);
-					final String hostName = target.getHostName().toLowerCase();
-					final Long duration = keepAliveDurationMap.get(hostName);
-					return duration != null ? duration : defaultKeepAliveDuration;
-				}
-
-			};
-			builder.setKeepAliveStrategy(ckaStrategy);
+		final Long dkad = config.getClientDefaultKeepAliveDuration();
+		if (dkad != null) {
+			setKeepAliveStrategy(builder, dkad);
 		}
 
 		final String proxy = config.getClientProxy();
@@ -107,58 +66,17 @@ public class CloseableHttpClientProvider implements Provider<CloseableHttpClient
 
 		final String cookieStoreClass = config.getClientCookieStoreClass();
 		if (!Strings.isNullOrEmpty(cookieStoreClass)) {
-			try {
-				@SuppressWarnings("unchecked")
-				Class<? extends CookieStore> cookieStoreType =
-						(Class<? extends CookieStore>) Class.forName(cookieStoreClass);
-				CookieStore cookieStore = cookieStoreType.newInstance();
-				builder.setDefaultCookieStore(cookieStore);
-			} catch (Exception ignored) {
-			}
+			setDefaultCookieStore(builder, cookieStoreClass);
 		}
 
-		final String credentialsProviderClass = config.getClientCredentialsProviderClass();
-		if (!Strings.isNullOrEmpty(credentialsProviderClass)) {
-			try {
-				@SuppressWarnings("unchecked")
-				Class<? extends CredentialsProvider> credentialsProviderType =
-						(Class<? extends CredentialsProvider>) Class.forName(credentialsProviderClass);
-				CredentialsProvider credentialsProvider = credentialsProviderType.newInstance();
-				builder.setDefaultCredentialsProvider(credentialsProvider);
-			} catch (Exception ignored) {
-			}
+		final String cpc = config.getClientCredentialsProviderClass();
+		if (!Strings.isNullOrEmpty(cpc)) {
+			setDefaultCredentialsProvider(builder, cpc);
 		}
 
 		final Integer maxRetryCount = config.getClientMaxRetryCount();
 		if (maxRetryCount != null) {
-			HttpRequestRetryHandler retryHandler = new HttpRequestRetryHandler() {
-
-				public boolean retryRequest(IOException exception, int executionCount,
-				                            HttpContext context) {
-					if (executionCount >= maxRetryCount) {
-						// Do not retry if over max retry count
-						return false;
-					}
-					if (exception instanceof InterruptedIOException) {
-						// Timeout or connection refused
-						return false;
-					}
-					if (exception instanceof UnknownHostException) {
-						// Unknown host
-						return false;
-					}
-					if (exception instanceof SSLException) {
-						// SSL handshake exception
-						return false;
-					}
-					HttpClientContext clientContext = HttpClientContext.adapt(context);
-					HttpRequest request = clientContext.getRequest();
-					// Retry if the request is considered idempotent
-					return !(request instanceof HttpEntityEnclosingRequest);
-				}
-
-			};
-			builder.setRetryHandler(retryHandler);
+			setRetryHandler(builder, maxRetryCount);
 		}
 
 		httpClient = builder.setDefaultRequestConfig(requestConfig).build();
@@ -174,5 +92,108 @@ public class CloseableHttpClientProvider implements Provider<CloseableHttpClient
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void setDefaultCookieStore(HttpClientBuilder builder,
+	                                   final String cookieStoreClass) {
+		try {
+			Class<? extends CookieStore> cookieStoreType =
+					(Class<? extends CookieStore>) Class.forName(cookieStoreClass);
+			CookieStore cookieStore = cookieStoreType.newInstance();
+			builder.setDefaultCookieStore(cookieStore);
+		} catch (Exception ignored) {
+			// nothing
+		}
+	}
+
+	private void setRetryHandler(HttpClientBuilder builder,
+	                             final Integer maxRetryCount) {
+		HttpRequestRetryHandler retryHandler = new HttpRequestRetryHandler() {
+
+			public boolean retryRequest(IOException exception, int executionCount,
+			                            HttpContext context) {
+				if (executionCount >= maxRetryCount) {
+					// Do not retry if over max retry count
+					return false;
+				}
+				if (exception instanceof InterruptedIOException) {
+					// Timeout or connection refused
+					return false;
+				}
+				if (exception instanceof UnknownHostException) {
+					// Unknown host
+					return false;
+				}
+				if (exception instanceof SSLException) {
+					// SSL handshake exception
+					return false;
+				}
+				HttpClientContext clientContext = HttpClientContext.adapt(context);
+				HttpRequest request = clientContext.getRequest();
+				// Retry if the request is considered idempotent
+				return !(request instanceof HttpEntityEnclosingRequest);
+			}
+
+		};
+		builder.setRetryHandler(retryHandler);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void setDefaultCredentialsProvider(HttpClientBuilder builder,
+	                                           final String credentialsProviderClass) {
+		try {
+			Class<? extends CredentialsProvider> credentialsProviderType =
+					(Class<? extends CredentialsProvider>) Class.forName(credentialsProviderClass);
+			CredentialsProvider credentialsProvider = credentialsProviderType.newInstance();
+			builder.setDefaultCredentialsProvider(credentialsProvider);
+		} catch (Exception ignored) {
+		}
+	}
+
+	private void setKeepAliveStrategy(HttpClientBuilder builder,
+	                                  final Long defaultKeepAliveDuration) {
+		final Map<String, Long> keepAliveDurationMap = new HashMap<>();
+		String[] keepAliveDuration = config.getClientKeepAliveDuration();
+		if (keepAliveDuration != null) {
+			for (String s : keepAliveDuration) {
+				final int pos = s.lastIndexOf('#');
+				if (pos < 0) {
+					continue;
+				}
+				Long duration = TypeCast.longOf(s.substring(pos + 1));
+				if (duration <= 0) {
+					continue;
+				}
+				final String hostname = s.substring(0, pos);
+				keepAliveDurationMap.put(hostname.toLowerCase(), duration);
+			}
+		}
+		ConnectionKeepAliveStrategy ckaStrategy = new ConnectionKeepAliveStrategy() {
+
+			public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+				// Honor 'keep-alive' header
+				HeaderElementIterator it = new BasicHeaderElementIterator(
+						response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+				while (it.hasNext()) {
+					HeaderElement he = it.nextElement();
+					final String param = he.getName();
+					final String value = he.getValue();
+					if (value != null && param.equalsIgnoreCase("timeout")) {
+						try {
+							return Long.parseLong(value) * 1000;
+						} catch (NumberFormatException ignore) {
+						}
+					}
+				}
+				final HttpHost target = (HttpHost) context.getAttribute(
+						HttpClientContext.HTTP_TARGET_HOST);
+				final String hostName = target.getHostName().toLowerCase();
+				final Long duration = keepAliveDurationMap.get(hostName);
+				return duration != null ? duration : defaultKeepAliveDuration;
+			}
+
+		};
+		builder.setKeepAliveStrategy(ckaStrategy);
 	}
 }
