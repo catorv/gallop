@@ -11,6 +11,7 @@
         <!-- JPA entities must be registered here -->
         <class>com.catorv.test.gallop.database.ExampleEntity</class>
         <class>com.catorv.test.gallop.database.entity.ExampleAbstractEntity</class>
+        <class>com.catorv.test.gallop.database.entity.ExampleAbstractAIEntity</class>
 
         <properties>
             <!-- vendor-specific properties go here -->

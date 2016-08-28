@@ -3,7 +3,6 @@ package com.catorv.gallop.database;
 import com.catorv.gallop.database.entity.AbstractAssignedIdEntity;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
-import com.google.inject.persist.PersistService;
 import org.hibernate.Session;
 
 import javax.persistence.*;
@@ -20,9 +19,6 @@ import java.util.Map;
 public class EntityDAO<T> {
 
 	@Inject
-	private PersistService persistService;
-
-	@Inject
 	private EntityManager entityManager;
 
 	private Class<T> entityClass;
@@ -34,10 +30,6 @@ public class EntityDAO<T> {
 	}
 
 	//
-
-	public PersistService getPersistService() {
-		return persistService;
-	}
 
 	public EntityManager getEntityManager() {
 		return entityManager;
