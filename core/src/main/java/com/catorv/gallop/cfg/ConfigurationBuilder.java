@@ -6,9 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -47,6 +45,18 @@ public class ConfigurationBuilder {
 					Object value = buildArray(type.getComponentType(), key, properties);
 					field.setAccessible(true);
 					field.set(result, value);
+					continue;
+				}
+
+				if (Map.class.isAssignableFrom(type)) {
+					ParameterizedType mapType = (ParameterizedType) field.getGenericType();
+					Class<?> groupType = (Class<?>) mapType.getActualTypeArguments()[1];
+					field.setAccessible(true);
+					if (groupType == Object.class) {
+						field.set(result, buildHashMap(key, properties));
+					} else {
+						field.set(result, buildGrouped(groupType, null, key, properties));
+					}
 					continue;
 				}
 

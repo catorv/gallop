@@ -9,13 +9,14 @@ import com.google.common.base.Strings;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
+
+import static org.junit.Assert.*;
 
 /**
  * 配置内容注入测试用例
@@ -25,10 +26,10 @@ import java.util.Properties;
 public class ConfigurationTest extends AbstractModule {
 
 	@Inject
-	private ConfigurationTestModel1 testModel1;
+	private Model1 testModel1;
 
 	@Configuration("test.config")
-	private ConfigurationTestModel2 testModel2;
+	private Model2 testModel2;
 
 	@Configuration("test.config.arrayValue1")
 	private Integer[] integers;
@@ -39,8 +40,11 @@ public class ConfigurationTest extends AbstractModule {
 	@Configuration("test.config.hash")
 	private Map<String, String> map;
 
-	@Configuration(section = "test.config.grouped", groupType = ConfigurationTestModel2.class)
-	private Map<String, ConfigurationTestModel2> groups;
+	@Configuration(section = "test.config.grouped", groupType = Model2.class)
+	private Map<String, Model2> groups;
+
+	@Inject
+	private Model3 model3;
 
 	@Inject
 	@Named("test.config.singleValue")
@@ -69,80 +73,98 @@ public class ConfigurationTest extends AbstractModule {
 
 	@Test
 	public void testNamespaceAnnotation() {
-		Assert.assertEquals(namespace, "test");
-		Assert.assertEquals(namespace2, "test1");
+		assertEquals(namespace, "test");
+		assertEquals(namespace2, "test1");
 	}
 
 	@Test
 	public void testAnnotatedOnClass() {
-		Assert.assertEquals(124, testModel1.intValue);
-		Assert.assertEquals("12.3", String.valueOf(testModel1.floatValue));
-		Assert.assertEquals("12.34", String.valueOf(testModel1.doubleValue));
-		Assert.assertEquals(123123, testModel1.longValue);
-		Assert.assertEquals("sssssss", testModel1.stringValue);
-		Assert.assertEquals(new Date(1466481662000L), testModel1.dateValue);
-		Assert.assertTrue(testModel1.booleanValue);
+		assertEquals(124, testModel1.intValue);
+		assertEquals("12.3", String.valueOf(testModel1.floatValue));
+		assertEquals("12.34", String.valueOf(testModel1.doubleValue));
+		assertEquals(123123, testModel1.longValue);
+		assertEquals("sssssss", testModel1.stringValue);
+		assertEquals(new Date(1466481662000L), testModel1.dateValue);
+		assertTrue(testModel1.booleanValue);
 	}
 
 	@Test
 	public void testAnnotatedOnMethod() {
-		Assert.assertEquals(new Date(1466481662000L), testModel2.dateValue);
-		Assert.assertEquals(124, testModel2.intValue);
-		Assert.assertEquals("12.3", String.valueOf(testModel2.floatValue));
-		Assert.assertEquals("12.34", String.valueOf(testModel2.doubleValue));
-		Assert.assertEquals(123123, testModel2.longValue);
-		Assert.assertEquals("sssssss", testModel2.stringValue);
-		Assert.assertEquals(3, testModel2.strings.length);
-		Assert.assertArrayEquals(new String[]{"123", "abc", "wyz"}, testModel2.strings);
-		Assert.assertTrue(testModel2.booleanValue);
+		assertEquals(new Date(1466481662000L), testModel2.dateValue);
+		assertEquals(124, testModel2.intValue);
+		assertEquals("12.3", String.valueOf(testModel2.floatValue));
+		assertEquals("12.34", String.valueOf(testModel2.doubleValue));
+		assertEquals(123123, testModel2.longValue);
+		assertEquals("sssssss", testModel2.stringValue);
+		assertEquals(3, testModel2.strings.length);
+		assertArrayEquals(new String[]{"123", "abc", "wyz"}, testModel2.strings);
+		assertTrue(testModel2.booleanValue);
 	}
 
 	@Test
 	public void testSingleValue() {
-		Assert.assertEquals("single value", singleValue);
+		assertEquals("single value", singleValue);
 	}
 
 	@Test
 	public void testProperties() {
-		Assert.assertEquals("single value", properties.getProperty("test.config.singleValue"));
+		assertEquals("single value", properties.getProperty("test.config.singleValue"));
 	}
 
 	@Test
 	public void testArrayConfiguration() {
-		Assert.assertEquals(3, integers.length);
-		Assert.assertArrayEquals(new Integer[]{123, 456, 789}, integers);
+		assertEquals(3, integers.length);
+		assertArrayEquals(new Integer[]{123, 456, 789}, integers);
 
-		Assert.assertEquals(3, strings.length);
-		Assert.assertArrayEquals(new String[]{"abc", "efg", "hij"}, strings);
+		assertEquals(3, strings.length);
+		assertArrayEquals(new String[]{"abc", "efg", "hij"}, strings);
 	}
 
 	@Test
 	public void testHashMapConfiguration() {
-		Assert.assertEquals("key 1", map.get("key1"));
-		Assert.assertEquals("key 2", map.get("key2"));
-		Assert.assertEquals("key 3", map.get("key3"));
+		assertEquals("key 1", map.get("key1"));
+		assertEquals("key 2", map.get("key2"));
+		assertEquals("key 3", map.get("key3"));
 	}
 
 	@Test
 	public void testGroupedConfiguration() {
-		Assert.assertTrue(groups.containsKey("group1"));
-		Assert.assertTrue(groups.containsKey("group2"));
+		assertTrue(groups.containsKey("group1"));
+		assertTrue(groups.containsKey("group2"));
 
-		ConfigurationTestModel2 testModel2 = groups.get("group1");
-		Assert.assertEquals(new Date(1466481662000L), testModel2.dateValue);
-		Assert.assertEquals(123, testModel2.intValue);
-		Assert.assertEquals("12.3", String.valueOf(testModel2.floatValue));
-		Assert.assertEquals("12.34", String.valueOf(testModel2.doubleValue));
-		Assert.assertEquals(123123, testModel2.longValue);
-		Assert.assertEquals("sssssss", testModel2.stringValue);
-		Assert.assertEquals(3, testModel2.strings.length);
-		Assert.assertArrayEquals(new String[]{"123", "abc", "wyz"}, testModel2.strings);
-		Assert.assertTrue(testModel2.booleanValue);
+		Model2 testModel2 = groups.get("group1");
+		assertEquals(new Date(1466481662000L), testModel2.dateValue);
+		assertEquals(123, testModel2.intValue);
+		assertEquals("12.3", String.valueOf(testModel2.floatValue));
+		assertEquals("12.34", String.valueOf(testModel2.doubleValue));
+		assertEquals(123123, testModel2.longValue);
+		assertEquals("sssssss", testModel2.stringValue);
+		assertEquals(3, testModel2.strings.length);
+		assertArrayEquals(new String[]{"123", "abc", "wyz"}, testModel2.strings);
+		assertTrue(testModel2.booleanValue);
 	}
 
 	@Test
 	public void testSystemProperties() {
-		Assert.assertFalse(Strings.isNullOrEmpty(userHome));
+		assertFalse(Strings.isNullOrEmpty(userHome));
 	}
 
+	@Test
+	public void testGroupedProperties() throws Exception {
+		Map<String, Model2> groups = model3.getGroups();
+
+		assertTrue(groups.containsKey("group1"));
+		assertTrue(groups.containsKey("group2"));
+
+		Model2 testModel2 = groups.get("group1");
+		assertEquals(new Date(1466481662000L), testModel2.dateValue);
+		assertEquals(123, testModel2.intValue);
+		assertEquals("12.3", String.valueOf(testModel2.floatValue));
+		assertEquals("12.34", String.valueOf(testModel2.doubleValue));
+		assertEquals(123123, testModel2.longValue);
+		assertEquals("sssssss", testModel2.stringValue);
+		assertEquals(3, testModel2.strings.length);
+		assertArrayEquals(new String[]{"123", "abc", "wyz"}, testModel2.strings);
+		assertTrue(testModel2.booleanValue);
+	}
 }
