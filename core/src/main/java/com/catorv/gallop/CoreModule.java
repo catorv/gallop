@@ -2,7 +2,6 @@ package com.catorv.gallop;
 
 import com.catorv.gallop.cfg.ConfigurationModule;
 import com.catorv.gallop.inject.AbstractNamedModule;
-import com.catorv.gallop.job.JobModule;
 import com.catorv.gallop.json.JsonModule;
 import com.catorv.gallop.lifecycle.LifecycleModule;
 import com.catorv.gallop.log.LoggerModule;
@@ -28,6 +27,5 @@ public class CoreModule extends AbstractNamedModule {
 		install(new LoggerModule());
 		install(new ObservableModule());
 		install(new JsonModule());
-		install(new JobModule());
 	}
 }
