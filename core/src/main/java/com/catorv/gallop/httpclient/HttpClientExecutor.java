@@ -212,6 +212,10 @@ public class HttpClientExecutor {
 			return updateHeader(HttpHeaders.USER_AGENT, userAgent);
 		}
 
+		public Builder referer(String referer) {
+			return updateHeader(HttpHeaders.REFERER, referer);
+		}
+
 		public Builder json() {
 			return contentType(ContentType.APPLICATION_JSON.toString());
 		}
