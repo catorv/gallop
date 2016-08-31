@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.google.common.io.Files;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URI;
 
@@ -38,7 +39,9 @@ public class HashFile extends File {
 	}
 
 	private static String buildName(String pathname, File parent) {
-		final String hash = DigestUtils.hash(pathname);
+		final String hex = DigestUtils.hash(pathname);
+		final BigInteger bi = new BigInteger(hex, 16);
+		final String hash = Strings.padStart(bi.toString(36), 25, '0');
 		final String extname = Files.getFileExtension(pathname);
 		return buildPath(parent, hash, extname);
 	}
