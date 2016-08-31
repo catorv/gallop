@@ -361,6 +361,9 @@ public class HttpClientExecutor {
 		public HttpClientExecutor build() throws URISyntaxException {
 			final HttpRequestBase request = executor.request;
 
+			if (uriBuilder.getScheme() == null) {
+				uriBuilder.setScheme("http");
+			}
 			request.setURI(uriBuilder.setCharset(executor.charset).build());
 			if (executor.stringBody == null) {
 				if (executor.formBody != null) {

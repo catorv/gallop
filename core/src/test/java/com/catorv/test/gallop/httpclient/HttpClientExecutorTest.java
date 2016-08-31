@@ -39,4 +39,14 @@ public class HttpClientExecutorTest {
 		Assert.assertTrue(string.length() > 0);
 	}
 
+	@Test
+	public void testDefaultScheme() throws URISyntaxException, IOException {
+		String string = executor.get("//www.baidu.com")
+				.parameter("wd", "haha")
+				.execute()
+				.returnString();
+
+		Assert.assertTrue(string.length() > 0);
+	}
+
 }
