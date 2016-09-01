@@ -49,6 +49,7 @@ public class ExampleDAO extends EntityDAO<ExampleEntity> {
 	}
 
 	@Select
+	@ParameterNames({"name"})
 	public ExampleEntity getByName(String name) {
 		return null;
 	}

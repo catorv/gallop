@@ -6,6 +6,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -122,7 +123,11 @@ class QueryMethodInvoker {
 			result = query.getResultList();
 		} else {
 			query.setMaxResults(1);
-			result = query.getSingleResult();
+			try {
+				result = query.getSingleResult();
+			} catch (NoResultException e) {
+				result = null;
+			}
 		}
 
 		return result == null ? methodInvocation.proceed() : result;
