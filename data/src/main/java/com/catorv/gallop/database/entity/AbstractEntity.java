@@ -31,10 +31,12 @@ public class AbstractEntity implements Entity {
 	@Column(length = 512, name = "description")
 	private String desc;
 
+	@Override
 	public String getId() {
 		return id;
 	}
 
+	@Override
 	public void setId(String id) {
 		this.id = id;
 	}
