@@ -1,11 +1,9 @@
 package com.catorv.gallop.io;
 
 import com.catorv.gallop.util.UUID;
-import com.google.common.base.Strings;
 import com.google.common.io.Files;
 
 import java.io.File;
-import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URI;
 
@@ -39,11 +37,8 @@ public class UdidFile extends File {
 	}
 
 	private static String buildName(String pathname, File parent) {
-		final String hex = UUID.getUUID32();
-		final BigInteger bi = new BigInteger(hex, 16);
-		final String hash = Strings.padStart(bi.toString(36), 25, '0');
 		final String extname = Files.getFileExtension(pathname);
-		return HashFile.buildPath(parent, hash, extname);
+		return HashFile.buildPath(parent, UUID.getUUID25(), extname);
 	}
 
 }

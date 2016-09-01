@@ -16,8 +16,10 @@ public class UUIDTest {
 	public void test() {
 		String uuid = UUID.getUUID();
 		String uuid32 = UUID.getUUID32();
+		String uuid25 = UUID.getUUID25();
 
 		Assert.assertEquals(uuid.length(), 36);
 		Assert.assertEquals(uuid32.length(), 32);
+		Assert.assertEquals(uuid25.length(), 25);
 	}
 }
