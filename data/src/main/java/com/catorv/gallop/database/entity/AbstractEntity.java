@@ -17,8 +17,11 @@ public class AbstractEntity implements Entity {
 	private static final long serialVersionUID = 9005668154934951558L;
 
 	@Id
-	@GeneratedValue(generator = "generator")
-	@GenericGenerator(name = "generator", strategy = "uuid2")
+	@GeneratedValue(generator = "UUID25Generator")
+	@GenericGenerator(
+			name = "UUID25Generator",
+			strategy = "com.catorv.gallop.database.entity.UUID25Generator"
+	)
 	@Column(length = 64)
 	private String id;
 

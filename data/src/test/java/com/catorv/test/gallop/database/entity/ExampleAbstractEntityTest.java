@@ -48,6 +48,8 @@ public class ExampleAbstractEntityTest {
 		assertEquals(ee.getTitle(), ee1.getTitle());
 		assertEquals(ee.getDesc(), ee1.getDesc());
 		assertEquals(ee.getUrl(), ee1.getUrl());
+
+		assertEquals(25, ee1.getId().length());
 	}
 
 	@Test(expected = PersistenceException.class)
