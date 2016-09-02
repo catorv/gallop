@@ -85,10 +85,10 @@ public class EntityDAO<T> {
 	public List<T> list(int start, int limit) {
 		CriteriaQuery<T> query = getCriteriaBuilder().createQuery(entityClass);
 		query.from(entityClass);
-		TypedQuery<T> createQuery = createQuery(query);
-		createQuery.setFirstResult(start < 0 ? 0 : start);
-		createQuery.setMaxResults(limit < 1 ? Integer.MAX_VALUE : limit);
-		return createQuery(query).getResultList();
+		TypedQuery<T> typedQuery = createQuery(query);
+		typedQuery.setFirstResult(start < 0 ? 0 : start);
+		typedQuery.setMaxResults(limit < 1 ? Integer.MAX_VALUE : limit);
+		return typedQuery.getResultList();
 	}
 
 	public Long count() {
@@ -130,10 +130,10 @@ public class EntityDAO<T> {
 		for (Predicate predicate : buildPredicates(entity, parameters)) {
 			query.where(predicate);
 		}
-		TypedQuery<T> createQuery = createQuery(query);
-		createQuery.setFirstResult(start < 0 ? 0 : start);
-		createQuery.setMaxResults(limit < 1 ? Integer.MAX_VALUE : limit);
-		return createQuery.getResultList();
+		TypedQuery<T> typedQuery = createQuery(query);
+		typedQuery.setFirstResult(start < 0 ? 0 : start);
+		typedQuery.setMaxResults(limit < 1 ? Integer.MAX_VALUE : limit);
+		return typedQuery.getResultList();
 	}
 
 	public CriteriaQuery<T> createCriteriaQuery() {
