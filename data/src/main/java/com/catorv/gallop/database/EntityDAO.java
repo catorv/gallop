@@ -45,6 +45,14 @@ public class EntityDAO<T> {
 
 	//
 
+	public T create() {
+		try {
+			return entityClass.newInstance();
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public T save(T entity) {
 		if (entity instanceof AbstractAssignedIdEntity) {
 			AbstractAssignedIdEntity aaie = (AbstractAssignedIdEntity) entity;
