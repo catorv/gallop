@@ -1,41 +1,55 @@
 package com.catorv.test.gallop.json;
 
-import com.catorv.gallop.json.JsonModule;
-import com.catorv.gallop.test.junit.GuiceModule;
-import com.catorv.gallop.test.junit.GuiceTestRunner;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
-import org.junit.Assert;
+import com.catorv.gallop.json.Json;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import java.io.IOException;
-import java.util.BitSet;
+import static com.catorv.test.gallop.json.TestData.*;
+import static org.junit.Assert.assertEquals;
 
 /**
- *
- * Created by cator on 8/1/16.
+ * Created by cator on 9/3/16.
  */
-@RunWith(GuiceTestRunner.class)
-@GuiceModule(JsonModule.class)
 public class JsonTest {
 
-	@Inject
-	private ObjectMapper objectMapper;
+	@Test
+	public void testReader() throws Exception {
+		JsonBean bean = Json.reader(JsonBean.class)
+				.readValue(getBeanString());
+
+		assertEquals(getJsonBean(), bean);
+	}
 
 	@Test
-	public void test() throws IOException {
-		JsonBean jsonBean = new JsonBean();
-		jsonBean.setString("s1");
-		jsonBean.setInteger(123);
-		BitSet bs = new BitSet();
-		bs.set(10020);
-		jsonBean.setBitSet(bs);
+	public void testWriter() throws Exception {
+		String string = Json.writer()
+				.writeValueAsString(getJsonBean());
 
-		JsonBean jsonBean2 = objectMapper.readValue(
-				objectMapper.writeValueAsString(jsonBean), JsonBean.class);
-
-		Assert.assertEquals(jsonBean, jsonBean2);
+		assertEquals(getBeanString(), string);
 	}
-}
 
+	@Test
+	public void testToString() throws Exception {
+		String string = Json.string(getJsonBean());
+		assertEquals(getBeanString(), string);
+
+		String objectString = Json.of(getJsonBean()).toString();
+		assertEquals(getBeanString(), objectString);
+
+		String mapString = Json.of(getMap()).toString();
+		assertEquals(getMapString(), mapString);
+
+		String listString = Json.of(getMap().get("citys")).toString();
+		assertEquals(getCitiesString(), listString);
+	}
+
+	@Test
+	public void testToObject() throws Exception {
+		JsonBean jsonBean = Json.of(getBeanString()).to(JsonBean.class);
+		assertEquals(getJsonBean(), jsonBean);
+
+		JsonBean jsonBean2 = Json.of(getBeanString().getBytes())
+				.to(JsonBean.class);
+		assertEquals(getJsonBean(), jsonBean2);
+	}
+
+}
