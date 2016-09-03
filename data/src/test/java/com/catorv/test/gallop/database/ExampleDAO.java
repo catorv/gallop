@@ -55,6 +55,7 @@ public class ExampleDAO extends EntityDAO<ExampleEntity> {
 	}
 
 	@Count
+	@ParameterNames({"name"})
 	public Long countByName(String name) {
 		return 0L;
 	}
