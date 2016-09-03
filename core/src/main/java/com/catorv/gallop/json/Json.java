@@ -6,10 +6,12 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.type.ArrayType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import java.io.*;
 import java.net.URL;
-import java.util.BitSet;
+import java.util.*;
 
 /**
  * Created by cator on 9/3/16.
@@ -34,6 +36,10 @@ public final class Json {
 	}
 
 	public static ObjectReader reader(TypeReference<?> type) {
+		return objectMapper.readerFor(type);
+	}
+
+	public static ObjectReader reader(JavaType type) {
 		return objectMapper.readerFor(type);
 	}
 
@@ -66,6 +72,10 @@ public final class Json {
 			return Json.string(object);
 		}
 
+		public byte[] toBytes() throws JsonProcessingException {
+			return objectMapper.writer().writeValueAsBytes(object);
+		}
+
 		public Transfer to(File file) throws IOException {
 			objectMapper.writer().writeValue(file, object);
 			return this;
@@ -82,7 +92,34 @@ public final class Json {
 		}
 
 		public <T> T to(Class<T> clazz) throws IOException {
-			ObjectReader reader = objectMapper.readerFor(clazz);
+			return read(objectMapper.readerFor(clazz));
+		}
+
+		public <T> T to(JavaType type) throws IOException {
+			return read(objectMapper.readerFor(type));
+		}
+
+		public <K, V> Map<K, V> toMap() throws IOException {
+			final TypeReference<HashMap> type = new TypeReference<HashMap>() {};
+			return read(objectMapper.readerFor(type));
+		}
+
+		public <E> List<E> toList() throws IOException {
+			final TypeReference<ArrayList> type = new TypeReference<ArrayList>() {};
+			return read(objectMapper.readerFor(type));
+		}
+
+		public <E> E[] toArray(Class<E> elementClass) throws IOException {
+			final TypeFactory typeFactory = TypeFactory.defaultInstance();
+			final ArrayType type = typeFactory.constructArrayType(elementClass);
+			return read(objectMapper.readerFor(type));
+		}
+
+		public Object[] toArray() throws IOException {
+			return toArray(Object.class);
+		}
+
+		private <T> T read(ObjectReader reader) throws IOException {
 			if (object instanceof String) {
 				return reader.readValue((String) object);
 			}
