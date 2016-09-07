@@ -12,7 +12,7 @@ import java.io.Serializable;
 		),
 		@NamedQuery(
 				name = "Query",
-				query = "FROM ExampleEntity WHERE id > :id1 AND id < :id2"
+				query = "FROM ExampleEntity WHERE id > :id1 AND id > :id1 AND id < :id2"
 		)
 })
 public class ExampleEntity implements Serializable {

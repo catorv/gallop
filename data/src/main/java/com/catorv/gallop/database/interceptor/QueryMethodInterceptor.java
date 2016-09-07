@@ -9,9 +9,15 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Query Method Interceptor
@@ -84,7 +90,12 @@ public class QueryMethodInterceptor implements MethodInterceptor {
 
 		ParameterNames parameterNames = method.getAnnotation(ParameterNames.class);
 		if (parameterNames == null) {
-			qmi.setParameterNames(new String[0]);
+			if (named != null) {
+				Class entityClass = ((EntityDAO) aThis).getEntityClass();
+				qmi.setParameterNames(getParamterNames(entityClass, named.value()));
+			} else {
+				qmi.setParameterNames(new String[0]);
+			}
 		} else {
 			qmi.setParameterNames(parameterNames.value());
 		}
@@ -95,5 +106,33 @@ public class QueryMethodInterceptor implements MethodInterceptor {
 
 		return qmi.invoke(mi);
 	}
+
+	private String[] getParamterNames(Class<?> clazz, String name) {
+		NamedQueries namedQueries = clazz.getAnnotation(NamedQueries.class);
+		if (namedQueries != null) {
+			NamedQuery namedQuery = null;
+			for (NamedQuery query : namedQueries.value()) {
+				if (query.name().equals(name)) {
+					namedQuery = query;
+					break;
+				}
+			}
+			if (namedQuery != null) {
+				List<String> names = new ArrayList<>();
+				String sql = namedQuery.query();
+				Pattern pattern = Pattern.compile(":(\\w+)");
+				Matcher matcher = pattern.matcher(sql);
+				while (matcher.find()) {
+					String matched = matcher.group(1);
+					if (!names.contains(matched)) {
+						names.add(matched);
+					}
+				}
+				return names.toArray(new String[0]);
+			}
+		}
+		return new String[0];
+	}
+
 }
 

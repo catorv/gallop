@@ -32,7 +32,7 @@ public class ExampleDAO extends EntityDAO<ExampleEntity> {
 
 	@Select
 	@Named("Query")
-	@ParameterNames({"id1", "id2"})
+//	@ParameterNames({"id1", "id2"})
 	public List<ExampleEntity> list3(Long id1, Long id2) {
 		return emptyList;
 	}
