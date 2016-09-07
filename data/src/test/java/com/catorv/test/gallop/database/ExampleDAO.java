@@ -30,8 +30,8 @@ public class ExampleDAO extends EntityDAO<ExampleEntity> {
 		return emptyList;
 	}
 
-	@Select
-	@Named("Query")
+	@Select("#Query")
+//	@Named("Query")
 //	@ParameterNames({"id1", "id2"})
 	public List<ExampleEntity> list3(Long id1, Long id2) {
 		return emptyList;

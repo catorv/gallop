@@ -4,6 +4,7 @@ import com.catorv.gallop.database.EntityDAO;
 import com.catorv.gallop.log.InjectLogger;
 import com.google.common.base.Strings;
 import com.google.inject.name.Named;
+import com.google.inject.name.Names;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.hibernate.HibernateException;
@@ -81,6 +82,10 @@ public class QueryMethodInterceptor implements MethodInterceptor {
 		if (named != null) {
 			qmi.setNamedQuery(true);
 			sql = named.value();
+		} else if (!Strings.isNullOrEmpty(sql) && sql.startsWith("#")) {
+			qmi.setNamedQuery(true);
+			sql = sql.substring(1);
+			named = Names.named(sql);
 		}
 
 		if (!isSelect && Strings.isNullOrEmpty(sql)) {
@@ -93,6 +98,8 @@ public class QueryMethodInterceptor implements MethodInterceptor {
 			if (named != null) {
 				Class entityClass = ((EntityDAO) aThis).getEntityClass();
 				qmi.setParameterNames(getParamterNames(entityClass, named.value()));
+			} else if (!Strings.isNullOrEmpty(sql)) {
+				qmi.setParameterNames(getParamterNames(sql));
 			} else {
 				qmi.setParameterNames(new String[0]);
 			}
@@ -110,28 +117,26 @@ public class QueryMethodInterceptor implements MethodInterceptor {
 	private String[] getParamterNames(Class<?> clazz, String name) {
 		NamedQueries namedQueries = clazz.getAnnotation(NamedQueries.class);
 		if (namedQueries != null) {
-			NamedQuery namedQuery = null;
 			for (NamedQuery query : namedQueries.value()) {
 				if (query.name().equals(name)) {
-					namedQuery = query;
-					break;
+					return getParamterNames(query.query());
 				}
-			}
-			if (namedQuery != null) {
-				List<String> names = new ArrayList<>();
-				String sql = namedQuery.query();
-				Pattern pattern = Pattern.compile(":(\\w+)");
-				Matcher matcher = pattern.matcher(sql);
-				while (matcher.find()) {
-					String matched = matcher.group(1);
-					if (!names.contains(matched)) {
-						names.add(matched);
-					}
-				}
-				return names.toArray(new String[0]);
 			}
 		}
 		return new String[0];
+	}
+
+	private String[] getParamterNames(String sql) {
+		List<String> names = new ArrayList<>();
+		Pattern pattern = Pattern.compile(":(\\w+)");
+		Matcher matcher = pattern.matcher(sql);
+		while (matcher.find()) {
+			String matched = matcher.group(1);
+			if (!names.contains(matched)) {
+				names.add(matched);
+			}
+		}
+		return names.toArray(new String[0]);
 	}
 
 }
