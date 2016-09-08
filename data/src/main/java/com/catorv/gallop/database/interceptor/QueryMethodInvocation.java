@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
  * Query Method Invocation
  * Created by cator on 8/13/16.
  */
-class QueryMethodInvoker {
+class QueryMethodInvocation {
 
 	private Logger logger;
 
@@ -32,7 +32,7 @@ class QueryMethodInvoker {
 
 	private Query query;
 
-	public QueryMethodInvoker(Logger logger) {
+	public QueryMethodInvocation(Logger logger) {
 		this.logger = logger;
 	}
 
@@ -69,7 +69,15 @@ class QueryMethodInvoker {
 
 		Object[] arguments = methodInvocation.getArguments();
 		int i = 0;
+		System.out.println(parameterNames);
+		System.out.println(arguments);
+		System.out.println(parameterNames.length);
+		for (String parameterName : parameterNames) {
+			System.out.println("param: " + parameterName);
+		}
+		System.out.println(arguments.length);
 		for(; i < parameterNames.length; i++) {
+			System.out.println(i);
 			query.setParameter(parameterNames[i], arguments[i]);
 		}
 		if (!isCountStatement && arguments.length - i == 2) {

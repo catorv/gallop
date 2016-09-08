@@ -29,7 +29,7 @@ public class QueryMethodInterceptor implements MethodInterceptor {
 	@InjectLogger
 	private Logger logger;
 
-	private ConcurrentMap<String, QueryMethodInvoker> cachedMethods = new ConcurrentHashMap<>();
+	private ConcurrentMap<Method, QueryMethodInvocation> cachedMethods = new ConcurrentHashMap<>();
 
 	@Override
 	public Object invoke(MethodInvocation mi) throws Throwable {
@@ -39,39 +39,38 @@ public class QueryMethodInterceptor implements MethodInterceptor {
 					aThis.getClass().getName());
 		}
 
-		Method method = mi.getMethod();
+		final Method method = mi.getMethod();
 
-		String cacheKey = aThis.getClass().getName() + ":" + method.getName();
-		QueryMethodInvoker qmi = cachedMethods.get(cacheKey);
+		QueryMethodInvocation qmi = cachedMethods.get(method);
 		if (qmi != null) {
 			return qmi.invoke(mi);
 		}
 
-		qmi = new QueryMethodInvoker(logger);
+		qmi = new QueryMethodInvocation(logger);
 
 		boolean isSelect = false;
 		String sql = null;
 		Select select = method.getAnnotation(Select.class);
 		if (select != null) {
-			qmi.setStatementType(QueryMethodInvoker.StatementType.Select);
+			qmi.setStatementType(QueryMethodInvocation.StatementType.Select);
 			isSelect = true;
 			sql = select.value();
 		} else {
 			Count count = method.getAnnotation(Count.class);
 			if (count != null) {
-				qmi.setStatementType(QueryMethodInvoker.StatementType.Select);
+				qmi.setStatementType(QueryMethodInvocation.StatementType.Select);
 				isSelect = true;
 				qmi.setCountStatement(true);
 				sql = count.value();
 			} else {
 				Update update = method.getAnnotation(Update.class);
 				if (update != null) {
-					qmi.setStatementType(QueryMethodInvoker.StatementType.Update);
+					qmi.setStatementType(QueryMethodInvocation.StatementType.Update);
 					sql = update.value();
 				} else {
 					Delete delete = method.getAnnotation(Delete.class);
 					if (delete != null) {
-						qmi.setStatementType(QueryMethodInvoker.StatementType.Delete);
+						qmi.setStatementType(QueryMethodInvocation.StatementType.Delete);
 						sql = delete.value();
 					}
 				}
@@ -109,7 +108,7 @@ public class QueryMethodInterceptor implements MethodInterceptor {
 
 		qmi.setNativeQuery(method.getAnnotation(NativeQuery.class) != null);
 
-		cachedMethods.put(cacheKey, qmi);
+		cachedMethods.put(method, qmi);
 
 		return qmi.invoke(mi);
 	}

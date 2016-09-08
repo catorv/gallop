@@ -145,6 +145,22 @@ public class ExampleEntityTest {
 
 	@Test
 	@Transactional
+	public void testMultiRecord2() {
+
+		for (Long i = 70L; i < 80; i++) {
+			ExampleEntity ee = new ExampleEntity();
+			ee.setId(i);
+			ee.setName("cator" + i);
+			dao.save(ee);
+		}
+
+		List<ExampleEntity> ees = dao.list4(72L, 76L);
+
+		Assert.assertEquals(3, ees.size());
+	}
+
+	@Test
+	@Transactional
 	public void testNativeQuery() {
 
 		for (Long i = 60L; i < 70; i++) {

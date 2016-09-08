@@ -37,6 +37,13 @@ public class ExampleDAO extends EntityDAO<ExampleEntity> {
 		return emptyList;
 	}
 
+	@Select()
+	@Named("Query")
+	@ParameterNames({"id1", "id2"})
+	public List<ExampleEntity> list4(Long id1, Long id2) {
+		return emptyList;
+	}
+
 	@Select("SELECT * FROM example WHERE id > 63 AND id < 68")
 	@NativeQuery
 	public List<ExampleEntity> list4() {
