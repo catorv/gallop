@@ -69,13 +69,6 @@ class QueryMethodInvocation {
 
 		Object[] arguments = methodInvocation.getArguments();
 		int i = 0;
-		System.out.println(parameterNames);
-		System.out.println(arguments);
-		System.out.println(parameterNames.length);
-		for (String parameterName : parameterNames) {
-			System.out.println("param: " + parameterName);
-		}
-		System.out.println(arguments.length);
 		for(; i < parameterNames.length; i++) {
 			System.out.println(i);
 			query.setParameter(parameterNames[i], arguments[i]);
