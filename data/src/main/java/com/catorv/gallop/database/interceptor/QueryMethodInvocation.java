@@ -48,7 +48,7 @@ class QueryMethodInvocation {
 		EntityDAO dao = (EntityDAO) methodInvocation.getThis();
 
 		if (query == null) {
-			if (isCountStatement) {
+			if (statementType != StatementType.Select) {
 				if (isNamedQuery) {
 					query = (Query) dao.getEntityManager().createNamedQuery(sql);
 				} else if (isNativeQuery) {
@@ -70,7 +70,6 @@ class QueryMethodInvocation {
 		Object[] arguments = methodInvocation.getArguments();
 		int i = 0;
 		for(; i < parameterNames.length; i++) {
-			System.out.println(i);
 			query.setParameter(parameterNames[i], arguments[i]);
 		}
 		if (!isCountStatement && arguments.length - i == 2) {
