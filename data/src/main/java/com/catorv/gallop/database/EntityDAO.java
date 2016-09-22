@@ -1,6 +1,5 @@
 package com.catorv.gallop.database;
 
-import com.catorv.gallop.database.entity.AbstractAssignedIdEntity;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import org.hibernate.Session;
@@ -47,24 +46,20 @@ public class EntityDAO<T> {
 
 	public T create() {
 		try {
-			return entityClass.newInstance();
+			T entity = entityClass.newInstance();
+			persist(entity);
+			return entity;
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	public T save(T entity) {
-		if (entity instanceof AbstractAssignedIdEntity) {
-			AbstractAssignedIdEntity aaie = (AbstractAssignedIdEntity) entity;
-			if (aaie.getId() != null) {
-				T merged = merge(entity);
-				flush();
-				return merged;
-			}
+		if (!contains(entity)) {
+			persist(entity);
+			return entity;
 		}
-		persist(entity);
-		flush();
-		return entity;
+		return merge(entity);
 	}
 
 	public void removeById(Object primaryKey) {
