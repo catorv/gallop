@@ -48,7 +48,7 @@ class QueryMethodInvocation {
 		EntityDAO dao = (EntityDAO) methodInvocation.getThis();
 
 		if (query == null) {
-			if (statementType != StatementType.Select) {
+			if (isCountStatement || statementType != StatementType.Select) {
 				if (isNamedQuery) {
 					query = (Query) dao.getEntityManager().createNamedQuery(sql);
 				} else if (isNativeQuery) {
