@@ -30,8 +30,6 @@ class QueryMethodInvocation {
 	private String sql;
 	private String[] parameterNames;
 
-	private Query query;
-
 	public QueryMethodInvocation(Logger logger) {
 		this.logger = logger;
 	}
@@ -47,23 +45,22 @@ class QueryMethodInvocation {
 	private Object invokeWithSql(MethodInvocation methodInvocation) throws Throwable {
 		EntityDAO dao = (EntityDAO) methodInvocation.getThis();
 
-		if (query == null) {
-			if (isCountStatement || statementType != StatementType.Select) {
-				if (isNamedQuery) {
-					query = (Query) dao.getEntityManager().createNamedQuery(sql);
-				} else if (isNativeQuery) {
-					query = (Query) dao.getEntityManager().createNativeQuery(sql);
-				} else {
-					query = (Query) dao.getEntityManager().createQuery(sql);
-				}
+		Query query;
+		if (isCountStatement || statementType != StatementType.Select) {
+			if (isNamedQuery) {
+				query = (Query) dao.getEntityManager().createNamedQuery(sql);
+			} else if (isNativeQuery) {
+				query = (Query) dao.getEntityManager().createNativeQuery(sql);
 			} else {
-				if (isNamedQuery) {
-					query = (Query) dao.createNamedQuery(sql);
-				} else if (isNativeQuery) {
-					query = (Query) dao.createNativeQuery(sql);
-				} else {
-					query = (Query) dao.createQuery(sql);
-				}
+				query = (Query) dao.getEntityManager().createQuery(sql);
+			}
+		} else {
+			if (isNamedQuery) {
+				query = (Query) dao.createNamedQuery(sql);
+			} else if (isNativeQuery) {
+				query = (Query) dao.createNativeQuery(sql);
+			} else {
+				query = (Query) dao.createQuery(sql);
 			}
 		}
 
