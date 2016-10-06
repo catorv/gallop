@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Properties;
 
 /**
@@ -37,56 +38,61 @@ class ConfigurationLoader {
 			}
 		}
 
-		if (url == null) {
-			url = Resources.getResource(DEFAULT_FILENAME);
-		}
-
 		properties = new Properties();
 
 		logger = new LoggerFactory().getLogger(getClass());
 	}
 
 	Properties load(String name) {
-		if (url != null) {
-			loadConfig(null);
+		loadConfig(null);
 
-			if (name != null) {
-				loadConfig(name);
-			}
+		if (name != null) {
+			loadConfig(name);
+		}
 
-			if (name == null || !name.equals(GLOBAL_NAME)) {
-				loadConfig(GLOBAL_NAME);
-			}
+		if (name == null || !name.equals(GLOBAL_NAME)) {
+			loadConfig(GLOBAL_NAME);
 		}
 
 		return properties;
 	}
 
 	private void loadConfig(String name) {
-		if (url == null) {
-			return;
-		}
-
 		String filename = buildFilename(name);
 
-		File file = new File(filename);
-		if (file.exists()) {
-			logger.info("load config from {} for {}",
-					filename, (name == null ? "default" : name));
+		if (url != null) {
+			File file = new File(filename);
+			if (file.exists()) {
+				logger.info("load config from {} for {}",
+						filename, (name == null ? "default" : name));
 
-			Properties namedProperties = new Properties();
-			try (InputStream is = new FileInputStream(file)) {
-				final InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+				try (InputStream is = new FileInputStream(file)) {
+					final InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+					Properties namedProperties = new Properties();
+					namedProperties.load(isr);
+					properties.putAll(namedProperties);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			try {
+				URL resource = Resources.getResource(filename);
+				logger.info("load config from {} for {}",
+						resource.getFile(), (name == null ? "default" : name));
+				InputStreamReader isr = new InputStreamReader(resource.openStream(),
+						Charset.defaultCharset());
+				Properties namedProperties = new Properties();
 				namedProperties.load(isr);
 				properties.putAll(namedProperties);
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				// nothing
 			}
 		}
 	}
 
 	private String buildFilename(String name) {
-		String filename = url.getFile();
+		String filename = url != null ? url.getFile() : DEFAULT_FILENAME;
 
 		if (name != null) {
 			String extname = Files.getFileExtension(filename);
