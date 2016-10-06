@@ -67,7 +67,8 @@ class ConfigurationLoader {
 						filename, (name == null ? "default" : name));
 
 				try (InputStream is = new FileInputStream(file)) {
-					final InputStreamReader isr = new InputStreamReader(is, "UTF-8");
+					final InputStreamReader isr = new InputStreamReader(is,
+							Charset.defaultCharset());
 					Properties namedProperties = new Properties();
 					namedProperties.load(isr);
 					properties.putAll(namedProperties);

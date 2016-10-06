@@ -1,7 +1,5 @@
 package com.catorv.gallop.util;
 
-import com.google.common.base.Charsets;
-
 import java.util.zip.CRC32;
 
 /**
@@ -30,7 +28,7 @@ public class CRC {
 	}
 
 	public static int crc16(String data) {
-		return crc16(data.getBytes(Charsets.UTF_8));
+		return crc16(data.getBytes());
 	}
 
 	public static long crc32(byte[] data) {
@@ -40,7 +38,7 @@ public class CRC {
 	}
 
 	public static long crc32(String data) {
-		return crc32(data.getBytes(Charsets.UTF_8));
+		return crc32(data.getBytes());
 	}
 
 }

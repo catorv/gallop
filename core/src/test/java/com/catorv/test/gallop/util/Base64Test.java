@@ -2,7 +2,6 @@ package com.catorv.test.gallop.util;
 
 import com.catorv.gallop.test.junit.GuiceTestRunner;
 import com.catorv.gallop.util.Base64;
-import com.google.common.base.Charsets;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +22,7 @@ public class Base64Test {
 
 	@Test
 	public void testBytes() {
-		byte[] bytes = string.getBytes(Charsets.UTF_8);
+		byte[] bytes = string.getBytes();
 		byte[] result = Base64.decode(Base64.encode(bytes));
 		Assert.assertEquals(new String(result), string);
 	}

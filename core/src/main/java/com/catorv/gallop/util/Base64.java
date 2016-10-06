@@ -1,7 +1,5 @@
 package com.catorv.gallop.util;
 
-import com.google.common.base.Charsets;
-
 /**
  * Base64编码和解码算法
  * Created by cator on 8/2/16.
@@ -14,7 +12,7 @@ public class Base64 {
 
 	public static String encode(String string) {
 		return org.apache.commons.codec.binary.Base64.encodeBase64String(
-				string.getBytes(Charsets.UTF_8));
+				string.getBytes());
 	}
 
 	public static byte[] decode(byte[] base64Data) {

@@ -91,7 +91,7 @@ public class HttpClientExecutor {
 		if (request instanceof HttpEntityEnclosingRequestBase) {
 			HttpEntityEnclosingRequestBase r = (HttpEntityEnclosingRequestBase) request;
 			if (stringBody != null) {
-				StringEntity entity = new StringEntity(stringBody, Consts.UTF_8);
+				StringEntity entity = new StringEntity(stringBody, Charset.defaultCharset());
 				Header header = request.getLastHeader(HttpHeaders.CONTENT_TYPE);
 				if (header != null) {
 					entity.setContentType(header);

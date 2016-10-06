@@ -1,6 +1,5 @@
 package com.catorv.gallop.util;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import org.apache.commons.codec.binary.Hex;
 
@@ -35,7 +34,7 @@ public class DigestUtils {
 	}
 
 	public static String md5(String data) {
-		return md5(data.getBytes(Charsets.UTF_8));
+		return md5(data.getBytes());
 	}
 
 	public static String sha1(byte[] data) {
@@ -48,7 +47,7 @@ public class DigestUtils {
 	}
 
 	public static String sha1(String data) {
-		return sha1(data.getBytes(Charsets.UTF_8));
+		return sha1(data.getBytes());
 	}
 
 	public static String sha256(byte[] data) {
@@ -61,7 +60,7 @@ public class DigestUtils {
 	}
 
 	public static String sha256(String data) {
-		return sha256(data.getBytes(Charsets.UTF_8));
+		return sha256(data.getBytes());
 	}
 
 
