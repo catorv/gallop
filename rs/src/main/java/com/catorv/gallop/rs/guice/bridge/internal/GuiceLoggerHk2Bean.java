@@ -40,13 +40,13 @@
 
 package com.catorv.gallop.rs.guice.bridge.internal;
 
+import com.catorv.gallop.log.LoggerFactory;
 import com.catorv.gallop.rs.guice.bridge.api.GuiceScope;
 import org.glassfish.hk2.api.DescriptorType;
 import org.glassfish.hk2.api.DescriptorVisibility;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
 import org.glassfish.hk2.utilities.reflection.ReflectionHelper;
-import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -82,7 +82,7 @@ public class GuiceLoggerHk2Bean<T> extends AbstractActiveDescriptor<T> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public T create(ServiceHandle<?> arg0) {
-		return (T) LoggerFactory.getLogger(loggerNameClass);
+		return (T) new LoggerFactory().getLogger(loggerNameClass);
 	}
 
 	@Override

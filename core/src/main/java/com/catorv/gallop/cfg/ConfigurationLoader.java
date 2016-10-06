@@ -1,10 +1,10 @@
 package com.catorv.gallop.cfg;
 
+import com.catorv.gallop.log.LoggerFactory;
 import com.google.common.base.Strings;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -43,7 +43,7 @@ class ConfigurationLoader {
 
 		properties = new Properties();
 
-		logger = LoggerFactory.getLogger(getClass());
+		logger = new LoggerFactory().getLogger(getClass());
 	}
 
 	Properties load(String name) {
