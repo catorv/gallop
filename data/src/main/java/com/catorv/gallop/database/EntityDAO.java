@@ -102,7 +102,7 @@ public class EntityDAO<T> {
 		return entityManager.createQuery(query).getSingleResult();
 	}
 
-	public List<T> findByNamedQuery(String queryName,
+	public List<T> listByNamedQuery(String queryName,
 	                                Map<String, Object> parameters) {
 		TypedQuery<T> query = createNamedQuery(queryName);
 		for (String key : parameters.keySet()) {
@@ -111,11 +111,11 @@ public class EntityDAO<T> {
 		return query.getResultList();
 	}
 
-	public List<T> findByNamedQuery(String queryName) {
+	public List<T> listByNamedQuery(String queryName) {
 		return createNamedQuery(queryName).getResultList();
 	}
 
-	public List<T> findByExample(Map<String, Object> parameters) {
+	public List<T> listByExample(Map<String, Object> parameters) {
 		CriteriaQuery<T> query = getCriteriaBuilder().createQuery(entityClass);
 		Root<T> entity = query.from(entityClass);
 		query.select(entity);
@@ -125,7 +125,7 @@ public class EntityDAO<T> {
 		return createQuery(query).getResultList();
 	}
 
-	public List<T> findByExample(Map<String, Object> parameters, int start,
+	public List<T> listByExample(Map<String, Object> parameters, int start,
 	                             int limit) {
 		CriteriaQuery<T> query = getCriteriaBuilder().createQuery(entityClass);
 		Root<T> entity = query.from(entityClass);
