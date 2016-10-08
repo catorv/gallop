@@ -21,6 +21,7 @@ public class TypeCastTest {
 		Assert.assertEquals(TypeCast.doubleOf("1.23"), 1.23, delta);
 		Assert.assertEquals(TypeCast.doubleOf("1.23a"), 0, delta);
 		Assert.assertEquals(TypeCast.doubleOf("a1.24"), 0,  delta);
+		Assert.assertEquals(TypeCast.doubleOf("-1.23E-3"), -0.00123,  delta);
 		Assert.assertEquals(TypeCast.doubleOf(null), 0,  delta);
 	}
 
@@ -30,6 +31,7 @@ public class TypeCastTest {
 		Assert.assertEquals(TypeCast.floatOf("1.23"), 1.23, delta);
 		Assert.assertEquals(TypeCast.floatOf("1.23a"), 0, delta);
 		Assert.assertEquals(TypeCast.floatOf("a1.24"), 0,  delta);
+		Assert.assertEquals(TypeCast.floatOf("-1.23E-3"), -0.00123,  delta);
 		Assert.assertEquals(TypeCast.floatOf(null), 0,  delta);
 	}
 
@@ -37,9 +39,10 @@ public class TypeCastTest {
 	public void testStringToLong() {
 		Assert.assertEquals(TypeCast.longOf("123456"), 123456);
 		Assert.assertEquals(TypeCast.longOf("123456L"), 0);
-		Assert.assertEquals(TypeCast.longOf("123.456"), 0);
+		Assert.assertEquals(TypeCast.longOf("123.856"), 123);
 		Assert.assertEquals(TypeCast.longOf("123456a"), 0);
 		Assert.assertEquals(TypeCast.longOf("a123456"), 0);
+		Assert.assertEquals(TypeCast.longOf("2.592E9"), 2592000000L);
 		Assert.assertEquals(TypeCast.longOf(null), 0);
 	}
 
@@ -47,9 +50,10 @@ public class TypeCastTest {
 	public void testStringToInt() {
 		Assert.assertEquals(TypeCast.intOf("123456"), 123456);
 		Assert.assertEquals(TypeCast.intOf("123456L"), 0);
-		Assert.assertEquals(TypeCast.intOf("123.456"), 0);
+		Assert.assertEquals(TypeCast.intOf("123.856"), 123);
 		Assert.assertEquals(TypeCast.intOf("123456a"), 0);
 		Assert.assertEquals(TypeCast.intOf("a123456"), 0);
+		Assert.assertEquals(TypeCast.intOf("2.592E8"), 259200000);
 		Assert.assertEquals(TypeCast.intOf(null), 0);
 	}
 

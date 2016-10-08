@@ -42,7 +42,7 @@ public class TypeCast {
 	 */
 	public static long longOf(String string) {
 		try {
-			return Long.parseLong(string);
+			return ((Double) Double.parseDouble(string)).longValue();
 		} catch (Exception e) {
 			return 0;
 		}
@@ -55,7 +55,7 @@ public class TypeCast {
 	 */
 	public static int intOf(String string) {
 		try {
-			return Integer.parseInt(string);
+			return ((Double) Double.parseDouble(string)).intValue();
 		} catch (Exception e) {
 			return 0;
 		}
@@ -70,7 +70,7 @@ public class TypeCast {
 		if (string == null) {
 			return false;
 		}
-		String lower = string.toLowerCase();
+		final String lower = string.toLowerCase();
 		return lower.equals("true") || lower.equals("yes");
 	}
 
