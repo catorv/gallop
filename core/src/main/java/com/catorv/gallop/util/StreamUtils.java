@@ -1,6 +1,9 @@
 package com.catorv.gallop.util;
 
+import com.google.common.io.LineProcessor;
+
 import java.io.*;
+import java.nio.charset.Charset;
 
 /**
  * Stream处理工具类
@@ -12,6 +15,25 @@ public class StreamUtils {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		copyStream(ins, baos);
 		return baos.toByteArray();
+	}
+
+	public static <T> T readLines(InputStream ins, LineProcessor<T> processor)
+			throws IOException {
+		return readLines(ins, Charset.defaultCharset(), processor);
+	}
+
+	public static <T> T readLines(InputStream ins, Charset charset,
+	                              LineProcessor<T> processor)
+			throws IOException {
+		final InputStreamReader isr = new InputStreamReader(ins, charset);
+		try (BufferedReader reader = new BufferedReader(isr)) {
+			String line;
+			//noinspection StatementWithEmptyBody
+			while ((line = reader.readLine()) != null && processor.processLine(line)) {
+				// nothing
+			}
+		}
+		return processor.getResult();
 	}
 
 	public static void copyStream(InputStream ins, OutputStream os)
