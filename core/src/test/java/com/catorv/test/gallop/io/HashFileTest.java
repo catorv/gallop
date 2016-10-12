@@ -1,7 +1,7 @@
 package com.catorv.test.gallop.io;
 
 import com.catorv.gallop.io.HashFile;
-import com.catorv.gallop.io.UdidFile;
+import com.catorv.gallop.io.UuidFile;
 import com.catorv.gallop.test.junit.GuiceTestRunner;
 import com.catorv.gallop.util.StreamUtils;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class HashFileTest {
 		File srcFile = new File("/data/test/resources/cator20061210.jpg");
 		FileInputStream ins = new FileInputStream(srcFile);
 
-		File destFile = new UdidFile("/data/test", "/data/test/resources/cator20061210.jpg");
+		File destFile = new UuidFile("/data/test", "/data/test/resources/cator20061210.jpg");
 		FileOutputStream os = new FileOutputStream(destFile);
 
 		StreamUtils.copyStream(ins, os);

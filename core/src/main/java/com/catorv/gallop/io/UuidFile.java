@@ -10,21 +10,21 @@ import java.net.URI;
 /**
  * Created by cator on 8/31/16.
  */
-public class UdidFile extends File {
+public class UuidFile extends File {
 
-	public UdidFile(String pathname) {
+	public UuidFile(String pathname) {
 		super(buildName(pathname, null));
 	}
 
-	public UdidFile(String parent, String child) {
+	public UuidFile(String parent, String child) {
 		super(parent, buildName(child, new File(parent)));
 	}
 
-	public UdidFile(File parent, String child) {
+	public UuidFile(File parent, String child) {
 		super(parent, buildName(child, parent));
 	}
 
-	public UdidFile(URI uri) {
+	public UuidFile(URI uri) {
 		super(buildUri(uri));
 	}
 
