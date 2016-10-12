@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 
 import java.util.Date;
 
+
 /**
  *
  * Created by cator on 8/3/16.
@@ -24,7 +25,6 @@ public class TypeCastTest {
 		Assert.assertEquals(TypeCast.doubleOf("-1.23E-3"), -0.00123,  delta);
 		Assert.assertEquals(TypeCast.doubleOf(null), 0,  delta);
 	}
-
 	@Test
 	public void testStringToFloat() {
 		float delta = (float) 0.000001;
