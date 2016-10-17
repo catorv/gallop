@@ -24,7 +24,7 @@ public abstract class AbstractUserType implements UserType {
 	}
 
 	public boolean equals(Object x, Object y) throws HibernateException {
-		return x == y;
+		return x.equals(y);
 	}
 
 	public int hashCode(Object x) throws HibernateException {
