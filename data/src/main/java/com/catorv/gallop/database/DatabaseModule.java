@@ -100,8 +100,7 @@ public class DatabaseModule extends AbstractNamedModule {
 					final Element property = (Element) node;
 					final String name = property.getAttribute("name");
 					final String value = property.getAttribute("value");
-					if (Strings.isNullOrEmpty(name)
-							|| Strings.isNullOrEmpty(name)) {
+					if (Strings.isNullOrEmpty(name) || Strings.isNullOrEmpty(value)) {
 						continue;
 					}
 					properties.setProperty(name, value);
