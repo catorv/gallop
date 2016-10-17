@@ -24,8 +24,9 @@ import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
+import javax.xml.xpath.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
@@ -80,44 +81,35 @@ public class DatabaseModule extends AbstractNamedModule {
 
 	private Properties buildProperties(String jpaUnit) {
 		Properties properties = new Properties();
-		try {
-			URL url = Resources.getResource("META-INF/persistence.xml");
-			File file = new File(url.getFile());
+		URL url = Resources.getResource("META-INF/persistence.xml");
+		try (InputStream is = url.openStream()) {
 			DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = builderFactory.newDocumentBuilder();
-			Document document = builder.parse(file);
-			NodeList units = document.getElementsByTagName("persistence-unit");
-			for (int i = 0; i < units.getLength(); i++) {
-				Node node = units.item(i);
+			Document document = builder.parse(is);
+
+			XPathFactory xPathfactory = XPathFactory.newInstance();
+			XPath xpath = xPathfactory.newXPath();
+			XPathExpression expr = xpath.compile("/persistence/" +
+					"persistence-unit[@name='" + jpaUnit + "']/" +
+					"properties/property");
+
+			NodeList nodeList = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				final Node node = nodeList.item(i);
 				if (node.getNodeType() == Node.ELEMENT_NODE) {
-					Element unit = (Element) node;
-					String name = unit.getAttribute("name");
-					if (jpaUnit.equals(name)) {
-						NodeList propertiesNodes = unit.getElementsByTagName("properties");
-						for (int j = 0; j < propertiesNodes.getLength(); j++) {
-							Node propertiesNode = propertiesNodes.item(j);
-							if (propertiesNode.getNodeType() == Node.ELEMENT_NODE) {
-								Element propertiesElement = (Element) propertiesNode;
-								NodeList propertyNodes = propertiesElement.getElementsByTagName("property");
-								for (int k = 0; k < propertyNodes.getLength(); k++) {
-									Node propertyNode = propertyNodes.item(k);
-									if (propertiesNode.getNodeType() == Node.ELEMENT_NODE) {
-										Element property = (Element) propertyNode;
-										String propertyName = property.getAttribute("name");
-										String propertyValue = property.getAttribute("value");
-										if (Strings.isNullOrEmpty(propertyName)
-												|| Strings.isNullOrEmpty(propertyName)) {
-											continue;
-										}
-										properties.setProperty(propertyName, propertyValue);
-									}
-								}
-							}
-						}
+					final Element property = (Element) node;
+					final String name = property.getAttribute("name");
+					final String value = property.getAttribute("value");
+					if (Strings.isNullOrEmpty(name)
+							|| Strings.isNullOrEmpty(name)) {
+						continue;
 					}
+					properties.setProperty(name, value);
 				}
 			}
-		} catch (IOException| ParserConfigurationException | SAXException e) {
+
+		} catch (IOException | ParserConfigurationException | SAXException |
+				XPathExpressionException e) {
 			Logger logger = new LoggerFactory().getLogger(getClass());
 			logger.warn("failed to read persistence.xml", e);
 		}
