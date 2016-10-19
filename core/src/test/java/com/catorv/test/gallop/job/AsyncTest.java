@@ -40,6 +40,7 @@ public class AsyncTest {
 		Future<String> result = job2();
 		String result2 = job3();
 
+		// 方法返回类型不是Future，因此方法被同步执行（忽略@Async）
 		Assert.assertEquals("OK3", result2);
 
 		Assert.assertFalse(job1Done);
