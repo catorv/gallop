@@ -2,7 +2,7 @@ package com.catorv.test.gallop.database.entity;
 
 import com.catorv.gallop.CoreModule;
 import com.catorv.gallop.database.DatabaseModule;
-import com.catorv.gallop.database.Model;
+import com.catorv.gallop.database.entity.EntityModel;
 import com.catorv.gallop.test.junit.GuiceModule;
 import com.catorv.gallop.test.junit.GuiceTestRunner;
 import com.google.inject.Inject;
@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 		CoreModule.class,
 		DatabaseModule.class
 })
-public class ExampleModelTest {
+public class ExampleEntityModelTest {
 
 	@Inject
 	private ExampleAbstractDAO dao;
@@ -40,7 +40,7 @@ public class ExampleModelTest {
 
 		dao.save(ee);
 
-		ExampleModel model = new ExampleModel(ee);
+		ExampleEntityModel model = new ExampleEntityModel(ee);
 
 		assertEquals(ee.getId(), model.getId());
 		assertEquals(ee.getName(), model.getName());
@@ -48,7 +48,7 @@ public class ExampleModelTest {
 		assertEquals(ee.getDesc(), model.getDesc());
 		assertEquals(ee.getUrl(), model.getUrl());
 
-		ExampleModel model1 = Model.of(ee, ExampleModel.class);
+		ExampleEntityModel model1 = EntityModel.of(ee, ExampleEntityModel.class);
 
 		assertEquals(ee.getId(), model1.getId());
 		assertEquals(ee.getName(), model1.getName());
@@ -69,7 +69,7 @@ public class ExampleModelTest {
 
 		dao.save(ee);
 
-		ExampleModelWithConfigure model = new ExampleModelWithConfigure(ee);
+		ExampleEntityModelWithConfigure model = new ExampleEntityModelWithConfigure(ee);
 
 		assertEquals(ee.getId(), model.getId());
 		assertEquals(ee.getName(), model.getName());
@@ -78,7 +78,7 @@ public class ExampleModelTest {
 		assertEquals(ee.getUrl() + "/index.html", model.getUrl());
 		assertEquals(ee.getName().length(), model.getNameLength());
 
-		ExampleModelWithConfigure model1 = Model.of(ee, ExampleModelWithConfigure.class);
+		ExampleEntityModelWithConfigure model1 = EntityModel.of(ee, ExampleEntityModelWithConfigure.class);
 
 		assertEquals(ee.getId(), model1.getId());
 		assertEquals(ee.getName(), model1.getName());
@@ -111,11 +111,11 @@ public class ExampleModelTest {
 		dao.save(ee2);
 
 		List<ExampleAbstractEntity> entities = Arrays.asList(ee1, ee2);
-		List<ExampleModelWithConfigure> models = Model.listOf(entities, ExampleModelWithConfigure.class);
+		List<ExampleEntityModelWithConfigure> models = EntityModel.listOf(entities, ExampleEntityModelWithConfigure.class);
 
 		assertEquals(2, models.size());
 
-		ExampleModelWithConfigure model1 = models.get(0);
+		ExampleEntityModelWithConfigure model1 = models.get(0);
 
 		assertEquals(ee1.getId(), model1.getId());
 		assertEquals(ee1.getName(), model1.getName());
@@ -124,7 +124,7 @@ public class ExampleModelTest {
 		assertEquals(ee1.getUrl() + "/index.html", model1.getUrl());
 		assertEquals(ee1.getName().length(), model1.getNameLength());
 
-		ExampleModelWithConfigure model2 = models.get(1);
+		ExampleEntityModelWithConfigure model2 = models.get(1);
 
 		assertEquals(ee2.getId(), model2.getId());
 		assertEquals(ee2.getName(), model2.getName());

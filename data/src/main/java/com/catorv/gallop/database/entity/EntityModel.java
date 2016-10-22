@@ -1,6 +1,5 @@
-package com.catorv.gallop.database;
+package com.catorv.gallop.database.entity;
 
-import com.catorv.gallop.database.entity.Entity;
 import com.catorv.gallop.util.ReflectUtils;
 
 import java.io.Serializable;
@@ -13,9 +12,9 @@ import java.util.List;
 /**
  * Created by cator on 8/27/16.
  */
-public class Model<E extends Entity> implements Serializable {
+public class EntityModel<E extends Entity> implements Serializable {
 
-	public Model(E entity) {
+	public EntityModel(E entity) {
 		try {
 			ReflectUtils.copy(entity, this);
 			configure(entity);
@@ -29,7 +28,7 @@ public class Model<E extends Entity> implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <E extends Entity, T extends Model<E>> T of(E entity, Class<T> modelClass) {
+	public static <E extends Entity, T extends EntityModel<E>> T of(E entity, Class<T> modelClass) {
 		try {
 			Constructor constructor = modelClass.getDeclaredConstructor(entity.getClass());
 			constructor.setAccessible(true);
@@ -44,7 +43,7 @@ public class Model<E extends Entity> implements Serializable {
 		return null;
 	}
 
-	public static <E extends Entity, T extends Model<E>> List<T> listOf(Collection<E> entities, Class<T> modelClass) {
+	public static <E extends Entity, T extends EntityModel<E>> List<T> listOf(Collection<E> entities, Class<T> modelClass) {
 		List<T> list = new ArrayList<>();
 		if (entities != null) {
 			for (E entity : entities) {
