@@ -31,7 +31,7 @@ public class HttpClientExecutorTest {
 
 	@Test
 	public void test() throws URISyntaxException, IOException {
-		String string = executor.get("http://www.baidu.com")
+		String string = executor.doGet("http://www.baidu.com")
 				.parameter("wd", "haha")
 				.execute()
 				.returnString();
@@ -41,7 +41,7 @@ public class HttpClientExecutorTest {
 
 	@Test
 	public void testDefaultScheme() throws URISyntaxException, IOException {
-		String string = executor.get("//www.baidu.com")
+		String string = executor.doGet("//www.baidu.com")
 				.parameter("wd", "haha")
 				.execute()
 				.returnString();

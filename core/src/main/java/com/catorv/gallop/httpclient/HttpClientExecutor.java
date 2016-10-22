@@ -52,31 +52,31 @@ public class HttpClientExecutor {
 	private UrlEncodedFormEntity formBody;
 	private MultipartEntityBuilder multipartBody;
 
-	public Builder get(String url) throws URISyntaxException {
+	public Builder doGet(String url) throws URISyntaxException {
 		return getBuilder(url, new HttpGet());
 	}
 
-	public Builder post(String url) throws URISyntaxException {
+	public Builder doPost(String url) throws URISyntaxException {
 		return getBuilder(url, new HttpPost());
 	}
 
-	public Builder delete(String url) throws URISyntaxException {
+	public Builder doDelete(String url) throws URISyntaxException {
 		return getBuilder(url, new HttpDelete());
 	}
 
-	public Builder put(String url) throws URISyntaxException {
+	public Builder doPut(String url) throws URISyntaxException {
 		return getBuilder(url, new HttpPut());
 	}
 
-	public Builder head(String url) throws URISyntaxException {
+	public Builder doHead(String url) throws URISyntaxException {
 		return getBuilder(url, new HttpHead());
 	}
 
-	public Builder trace(String url) throws URISyntaxException {
+	public Builder doTrace(String url) throws URISyntaxException {
 		return getBuilder(url, new HttpTrace());
 	}
 
-	public Builder options(String url) throws URISyntaxException {
+	public Builder doOptions(String url) throws URISyntaxException {
 		return getBuilder(url, new HttpOptions());
 	}
 
