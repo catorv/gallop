@@ -5,7 +5,7 @@ import com.catorv.gallop.database.Model;
 /**
  * Created by cator on 8/28/16.
  */
-public class ExampleModel2 extends Model<ExampleAbstractEntity> {
+public class ExampleModelWithConfigure extends Model<ExampleAbstractEntity> {
 
 	private String id;
 	private String name;
@@ -20,7 +20,7 @@ public class ExampleModel2 extends Model<ExampleAbstractEntity> {
 		nameLength = entity.getName().length();
 	}
 
-	public ExampleModel2(ExampleAbstractEntity entity) {
+	public ExampleModelWithConfigure(ExampleAbstractEntity entity) {
 		super(entity);
 	}
 
