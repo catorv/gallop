@@ -175,4 +175,24 @@ public class ExampleEntityTest {
 		Assert.assertEquals(4, ees.size());
 	}
 
+
+
+	@Test
+	@Transactional
+	public void testCountReturnInteger() {
+
+		for (Long i = 80L; i < 90; i++) {
+			ExampleEntity ee = new ExampleEntity();
+			ee.setId(i);
+			ee.setName("cator" + i);
+			dao.save(ee);
+		}
+
+		List<ExampleEntity> ees = dao.list5();
+		int count = dao.countAnnotated2();
+
+		Assert.assertEquals(4, ees.size());
+		Assert.assertEquals(10, count);
+	}
+
 }

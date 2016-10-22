@@ -13,10 +13,12 @@ public interface Message<T> extends Serializable {
 
 	T getContent();
 
-	void setProperty(String name, Object value);
+	Session getSession();
 
-	Object getProperty(String name);
+	void setInfo(String name, Object value);
 
-	Map<String, Object> getProperties();
+	Object getInfo(String name);
+
+	Map<String, Object> getAllInfo();
 
 }

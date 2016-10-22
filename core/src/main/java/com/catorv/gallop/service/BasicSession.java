@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Base Session
  * Created by cator on 8/15/16.
  */
-public class BaseSession extends AbstractSession {
+public class BasicSession extends AbstractSession {
 
 	private static final long serialVersionUID = 3173527760794432323L;
 

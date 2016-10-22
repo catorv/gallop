@@ -50,9 +50,19 @@ public class ExampleDAO extends EntityDAO<ExampleEntity> {
 		return emptyList;
 	}
 
+	@Select("FROM ExampleEntity WHERE id > 85 AND id < 90")
+	public List<ExampleEntity> list5() {
+		return emptyList;
+	}
+
 	@Count
 	public Long countAnnotated() {
 		return 0L;
+	}
+
+	@Count
+	public int countAnnotated2() {
+		return 0;
 	}
 
 	@Select
