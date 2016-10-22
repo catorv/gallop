@@ -7,10 +7,7 @@ import org.hibernate.Session;
 import javax.persistence.*;
 import javax.persistence.criteria.*;
 import javax.persistence.metamodel.Metamodel;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Entity Manager DAO
@@ -24,7 +21,9 @@ public class EntityDAO<T> {
 	private Class<T> entityClass;
 
 	@SuppressWarnings("unchecked")
-	protected List<T> emptyList = Collections.EMPTY_LIST;
+	protected final List<T> emptyList = Collections.EMPTY_LIST;
+	@SuppressWarnings("unchecked")
+	protected final Set<T> emptySet = Collections.EMPTY_SET;
 
 	protected EntityDAO(Class<T> entityClass) {
 		this.entityClass = entityClass;
