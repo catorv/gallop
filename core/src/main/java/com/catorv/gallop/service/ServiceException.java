@@ -17,10 +17,11 @@ public abstract class ServiceException extends Exception {
 	public static final ServiceException ILLEGAL_PARAMETER  = new E(4, "非法参数");
 	public static final ServiceException MISSING_PARAMETER  = new E(5, "缺少参数");
 	public static final ServiceException BAD_DATA           = new E(6, "数据错误");
-	public static final ServiceException ENTITY_NOT_FOUND   = new E(7, "未找到数据");
-	public static final ServiceException DUPLICATE_ENTITY   = new E(8, "数据重复");
-	public static final ServiceException AUTH_FAILED        = new E(9, "认证失败");
-	public static final ServiceException INVALID_SESSION    = new E(10, "无效的Session");
+	public static final ServiceException MISSING_DATA       = new E(7, "数据错误");
+	public static final ServiceException ENTITY_NOT_FOUND   = new E(8, "未找到数据");
+	public static final ServiceException DUPLICATE_ENTITY   = new E(9, "数据重复");
+	public static final ServiceException AUTH_FAILED        = new E(10, "认证失败");
+	public static final ServiceException INVALID_SESSION    = new E(11, "无效的Session");
 
 	private int code = -1;
 
@@ -51,6 +52,10 @@ public abstract class ServiceException extends Exception {
 
 	public int getCode() {
 		return code;
+	}
+
+	public ServiceException withMessage(String message) {
+		return new E(code, message);
 	}
 
 	private static class E extends ServiceException {
