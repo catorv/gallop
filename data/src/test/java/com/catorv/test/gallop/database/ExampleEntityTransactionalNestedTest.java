@@ -5,6 +5,7 @@ import com.catorv.gallop.database.DatabaseModule;
 import com.catorv.gallop.lifecycle.LifecycleModule;
 import com.catorv.gallop.test.junit.GuiceModule;
 import com.catorv.gallop.test.junit.GuiceTestRunner;
+import com.catorv.gallop.test.junit.MultiThreaded;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import org.junit.Assert;
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicLong;
 		LifecycleModule.class,
 		DatabaseModule.class
 })
+@MultiThreaded(numThreads = 10)
 public class ExampleEntityTransactionalNestedTest {
 
 	@Inject
@@ -37,11 +39,12 @@ public class ExampleEntityTransactionalNestedTest {
 	@Transactional
 	public void test() {
 		ExampleEntity ee = new ExampleEntity();
-		ee.setId(num.incrementAndGet());
+		long id = num.incrementAndGet();
+		ee.setId(id);
 		ee.setName("example entity");
 		save(ee);
 
-		ExampleEntity ee2 = dao.find(1L);
+		ExampleEntity ee2 = dao.find(id);
 
 		Assert.assertEquals(ee, ee2);
 	}

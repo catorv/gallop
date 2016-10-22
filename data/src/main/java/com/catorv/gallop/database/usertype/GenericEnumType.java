@@ -26,6 +26,8 @@ public class GenericEnumType
 		implements EnhancedUserType, DynamicParameterizedType, LoggableUserType,
 		Serializable {
 
+	public static final String CLASS_NAME = "com.catorv.gallop.database.usertype.GenericEnumType";
+
 	private Class<? extends Enum> enumClass;
 	private Method identifierMethod;
 	private Method valueOfMethod;
