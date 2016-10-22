@@ -69,9 +69,14 @@ class QueryMethodInvocation {
 		for(; i < parameterNames.length; i++) {
 			query.setParameter(parameterNames[i], arguments[i]);
 		}
+		//noinspection Duplicates
 		if (!isCountStatement && arguments.length - i == 2) {
-			query.setFirstResult((Integer) arguments[i++]);
-			query.setMaxResults((Integer) arguments[i]);
+			final Integer start = (Integer) arguments[i++];
+			final Integer limit = (Integer) arguments[i];
+			if (start >= 0 && limit > 0) {
+				query.setFirstResult(start);
+				query.setMaxResults(start + limit);
+			}
 		}
 
 		if (statementType == StatementType.Select) {
@@ -112,9 +117,14 @@ class QueryMethodInvocation {
 		}
 
 		TypedQuery typeQuery = dao.createQuery(criteriaQuery);
+		//noinspection Duplicates
 		if (!isCountStatement && arguments.length - i == 2) {
-			typeQuery.setFirstResult((Integer) arguments[i++]);
-			typeQuery.setMaxResults((Integer) arguments[i]);
+			final Integer start = (Integer) arguments[i++];
+			final Integer limit = (Integer) arguments[i];
+			if (start >= 0 && limit > 0) {
+				typeQuery.setFirstResult(start);
+				typeQuery.setMaxResults(start + limit);
+			}
 		}
 
 		return getResult(methodInvocation, typeQuery);

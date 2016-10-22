@@ -90,8 +90,10 @@ public class EntityDAO<T> {
 		CriteriaQuery<T> query = getCriteriaBuilder().createQuery(entityClass);
 		query.from(entityClass);
 		TypedQuery<T> typedQuery = createQuery(query);
-		typedQuery.setFirstResult(start < 0 ? 0 : start);
-		typedQuery.setMaxResults(limit < 1 ? Integer.MAX_VALUE : limit);
+		if (start >= 0 && limit > 0) {
+			typedQuery.setFirstResult(start);
+			typedQuery.setMaxResults(start + limit);
+		}
 		return typedQuery.getResultList();
 	}
 
@@ -135,8 +137,10 @@ public class EntityDAO<T> {
 			query.where(predicate);
 		}
 		TypedQuery<T> typedQuery = createQuery(query);
-		typedQuery.setFirstResult(start < 0 ? 0 : start);
-		typedQuery.setMaxResults(limit < 1 ? Integer.MAX_VALUE : limit);
+		if (start >= 0 && limit > 0) {
+			typedQuery.setFirstResult(start);
+			typedQuery.setMaxResults(start + limit);
+		}
 		return typedQuery.getResultList();
 	}
 
