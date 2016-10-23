@@ -15,38 +15,38 @@ import java.util.BitSet;
  */
 public final class Xml {
 
-	public static XmlMapper xmlMapper;
+	public static XmlMapper objectMapper;
 
 	static {
-		xmlMapper = new XmlMapper();
-		xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		objectMapper = new XmlMapper();
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 		SimpleModule module = new SimpleModule("XmlModule", new Version(1, 0,
 				0, null, null, null));
 		module.addSerializer(new BitSetSerializer());
 		module.addDeserializer(BitSet.class, new BitSetDeserializer());
-		xmlMapper.registerModule(module);
+		objectMapper.registerModule(module);
 	}
 
 	public static ObjectReader reader(Class<?> type) {
-		return xmlMapper.readerFor(type);
+		return objectMapper.readerFor(type);
 	}
 
 	public static ObjectReader reader(TypeReference<?> type) {
-		return xmlMapper.readerFor(type);
+		return objectMapper.readerFor(type);
 	}
 
 	public static ObjectReader reader(JavaType type) {
-		return xmlMapper.readerFor(type);
+		return objectMapper.readerFor(type);
 	}
 
 	public static ObjectWriter writer() {
-		return xmlMapper.writer();
+		return objectMapper.writer();
 	}
 
 	public static String string(Object object) {
 		try {
-			return xmlMapper.writer().writeValueAsString(object);
+			return objectMapper.writer().writeValueAsString(object);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
@@ -58,7 +58,7 @@ public final class Xml {
 	 * @return Json Transfer
 	 */
 	public static DataFormatTransfer of(Object source) {
-		return new DataFormatTransfer(source, xmlMapper);
+		return new DataFormatTransfer(source, objectMapper);
 	}
 
 }

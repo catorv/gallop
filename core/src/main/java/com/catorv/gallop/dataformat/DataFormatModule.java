@@ -16,7 +16,7 @@ public class DataFormatModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(ObjectMapper.class).toInstance(Json.objectMapper);
-		bind(XmlMapper.class).toInstance(Xml.xmlMapper);
+		bind(XmlMapper.class).toInstance(Xml.objectMapper);
 	}
 
 	@Provides
