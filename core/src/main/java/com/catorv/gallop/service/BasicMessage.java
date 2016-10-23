@@ -1,5 +1,6 @@
 package com.catorv.gallop.service;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +56,36 @@ public class BasicMessage<T> implements Message<T> {
 	@Override
 	public Map<String, Object> getAllInfo() {
 		return info;
+	}
+
+	public String getInfoAsString(String name, @Nullable String defaultValue) {
+		final Object value = getInfo(name);
+		if (value == null) return defaultValue;
+		return String.valueOf(value);
+	}
+
+	public int getInfoAsInt(String name, int defaultValue) {
+		final Object value = getInfo(name);
+		if (value == null) return defaultValue;
+		return (int) value;
+	}
+
+	public long getInfoAsLong(String name, long defaultValue) {
+		final Object value = getInfo(name);
+		if (value == null) return defaultValue;
+		return (long) value;
+	}
+
+	public double getInfoAsDouble(String name, double defaultValue) {
+		final Object value = getInfo(name);
+		if (value == null) return defaultValue;
+		return (double) value;
+	}
+
+	public boolean getInfoAsBoolean(String name, boolean defaultValue) {
+		final Object value = getInfo(name);
+		if (value == null) return defaultValue;
+		return (boolean) value;
 	}
 
 }
