@@ -17,7 +17,7 @@ public class HttpServerConfiguration {
 
 	public static final String DEFAULT_HOST = "127.0.0.1";
 	public static final int DEFAULT_PORT = 8080;
-	public static final String DEFAULT_ROOT_PATH = "/";
+	public static final  String DEFAULT_ROOT_PATH = "/";
 
 	private String host;
 	private int port;
