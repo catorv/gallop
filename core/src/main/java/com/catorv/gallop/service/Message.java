@@ -15,10 +15,10 @@ public interface Message<T> extends Serializable {
 
 	Session getSession();
 
-	void setInfo(String name, Object value);
+	void setField(String name, Object value);
 
-	Object getInfo(String name);
+	Object getField(String name);
 
-	Map<String, Object> getAllInfo();
+	Map<String, Object> getFields();
 
 }
