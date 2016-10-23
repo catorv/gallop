@@ -15,18 +15,23 @@ import javax.annotation.Nullable;
 public abstract class ServiceException extends Exception {
 
 	public static final ServiceException OK = new E(0, "OK");
+
 	public static final ServiceException UNKNOWN = new E(1000, "未知错误");
 	public static final ServiceException PERMISSION_DENIED = new E(1001, "权限禁止");
 	public static final ServiceException OPERATION_FAILED = new E(1002, "操作失败");
 	public static final ServiceException OPERATION_TIMEOUT = new E(1003, "操作超时");
+
 	public static final ServiceException ILLEGAL_PARAMETER = new E(1010, "非法参数");
 	public static final ServiceException MISSING_PARAMETER = new E(1011, "缺少参数");
+
 	public static final ServiceException BAD_DATA = new E(1020, "数据错误");
 	public static final ServiceException MISSING_DATA = new E(1021, "数据错误");
 	public static final ServiceException ENTITY_NOT_FOUND = new E(1022, "未找到数据");
 	public static final ServiceException DUPLICATE_ENTITY = new E(1023, "数据重复");
+
 	public static final ServiceException AUTH_FAILED = new E(1090, "认证失败");
 	public static final ServiceException INVALID_SESSION = new E(1091, "无效的Session");
+	public static final ServiceException INVALID_VERIFY_CODE = new E(1092, "无效的验证码");
 
 	private int code = 1000;
 
