@@ -2,6 +2,7 @@ package com.catorv.test.gallop.dataformat;
 
 import com.catorv.gallop.dataformat.Json;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.junit.Test;
 
@@ -121,4 +122,17 @@ public class JsonTest {
 		assertEquals(123, array[0].getInteger().intValue());
 		assertEquals(223, array[1].getInteger().intValue());
 	}
+
+	@Test
+	public void testToTree() throws Exception {
+		JsonNode node = Json.of(getBeanString()).toTree();
+		assertEquals("s1", node.get("string").asText());
+		assertEquals(123, node.get("integer").asInt());
+
+		JsonNode node1 = Json.of(getMap()).toTree();
+		assertEquals("cator", node1.get("name").asText());
+		assertEquals(38, node1.get("age").asInt());
+		assertEquals(true, node1.get("male").asBoolean());
+	}
+
 }

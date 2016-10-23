@@ -100,6 +100,28 @@ public class DataFormatTransfer {
 		return toArray(Object.class);
 	}
 
+	public JsonNode toTree() throws IOException {
+		if (object instanceof String) {
+			return objectMapper.readTree((String) object);
+		}
+		if (object instanceof InputStream) {
+			return objectMapper.readTree((InputStream) object);
+		}
+		if (object instanceof File) {
+			return objectMapper.readTree((File) object);
+		}
+		if (object instanceof byte[]) {
+			return objectMapper.readTree((byte[]) object);
+		}
+		if (object instanceof Reader) {
+			return objectMapper.readTree((Reader) object);
+		}
+		if (object instanceof URL) {
+			return objectMapper.readTree((URL) object);
+		}
+		return objectMapper.valueToTree(object);
+	}
+
 	private <T> T read(ObjectReader reader) throws IOException {
 		if (object instanceof String) {
 			return reader.readValue((String) object);
