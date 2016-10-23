@@ -58,9 +58,19 @@ public abstract class ServiceException extends Exception {
 		return new E(code, message);
 	}
 
+	public ServiceException withCause(Throwable cause) {
+		return new E(code, getMessage(), cause);
+	}
+
 	private static class E extends ServiceException {
+
 		public E(int code, String message) {
 			super(code, message);
 		}
+
+		public E(int code, String message, Throwable cause) {
+			super(code, message, cause);
+		}
+
 	}
 }
