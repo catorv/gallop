@@ -19,7 +19,6 @@
         <dependency>
             <groupId>com.catorv.gallop</groupId>
             <artifactId>gallop-core</artifactId>
-            <version>${gallop.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
@@ -51,17 +50,14 @@
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-base</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>
@@ -77,7 +73,6 @@
         <dependency>
             <groupId>com.catorv.gallop</groupId>
             <artifactId>gallop-test</artifactId>
-            <version>${gallop.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
