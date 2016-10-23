@@ -70,7 +70,7 @@ public class GenericEnumType
 
 		sqlType = type.getSqlTypeDescriptor().getSqlType();
 
-		String valueOfMethodName = parameters.getProperty("valueOfMethod", "valueOf");
+		String valueOfMethodName = parameters.getProperty("valueOfMethod", "of");
 		try {
 			valueOfMethod = enumClass.getMethod(valueOfMethodName, identifierType);
 		} catch (Exception e) {
