@@ -5,7 +5,7 @@ import com.catorv.gallop.cache.CacheModule;
 import com.catorv.gallop.cache.Cacheable;
 import com.catorv.gallop.cfg.ConfigurationModule;
 import com.catorv.test.gallop.cache.model.CacheValueBean;
-import com.catorv.gallop.json.JsonModule;
+import com.catorv.gallop.dataformat.DataFormatModule;
 import com.catorv.gallop.lifecycle.LifecycleModule;
 import com.catorv.gallop.log.LoggerModule;
 import com.catorv.gallop.memcached.MemcachedModule;
@@ -27,7 +27,7 @@ import java.util.Date;
 		LifecycleModule.class,
 		ConfigurationModule.class,
 		LoggerModule.class,
-		JsonModule.class,
+		DataFormatModule.class,
 		MemcachedModule.class,
 		RedisModule.class,
 		CacheModule.class

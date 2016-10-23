@@ -3,7 +3,7 @@ package com.catorv.test.gallop.cache;
 import com.catorv.gallop.cache.CacheModule;
 import com.catorv.gallop.cache.adapter.CacheBuilder;
 import com.catorv.gallop.cfg.ConfigurationModule;
-import com.catorv.gallop.json.JsonModule;
+import com.catorv.gallop.dataformat.DataFormatModule;
 import com.catorv.gallop.lifecycle.LifecycleModule;
 import com.catorv.gallop.log.LoggerModule;
 import com.catorv.gallop.memcached.MemcachedModule;
@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 		LifecycleModule.class,
 		ConfigurationModule.class,
 		LoggerModule.class,
-		JsonModule.class,
+		DataFormatModule.class,
 		MemcachedModule.class,
 		RedisModule.class,
 		CacheModule.class

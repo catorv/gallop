@@ -1,6 +1,6 @@
 package com.catorv.test.gallop.json;
 
-import com.catorv.gallop.json.Json;
+import com.catorv.gallop.dataformat.Json;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import org.junit.Test;

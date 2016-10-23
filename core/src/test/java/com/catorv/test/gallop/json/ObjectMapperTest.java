@@ -1,6 +1,6 @@
 package com.catorv.test.gallop.json;
 
-import com.catorv.gallop.json.JsonModule;
+import com.catorv.gallop.dataformat.DataFormatModule;
 import com.catorv.gallop.test.junit.GuiceModule;
 import com.catorv.gallop.test.junit.GuiceTestRunner;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +18,7 @@ import java.io.IOException;
  * Created by cator on 8/1/16.
  */
 @RunWith(GuiceTestRunner.class)
-@GuiceModule(JsonModule.class)
+@GuiceModule(DataFormatModule.class)
 public class ObjectMapperTest {
 
 	@Inject

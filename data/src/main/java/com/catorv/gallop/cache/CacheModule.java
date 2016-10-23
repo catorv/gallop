@@ -15,7 +15,7 @@ import java.lang.reflect.AnnotatedElement;
  * 依赖模块:
  *  ConfigurationModule
  *  LoggerModule
- *  JsonModule
+ *  DataFormatModule
  *  MemcachedModule
  *  RedisModule
  * Created by cator on 8/3/16.

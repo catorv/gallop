@@ -1,4 +1,4 @@
-package com.catorv.gallop.json;
+package com.catorv.gallop.dataformat;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

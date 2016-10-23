@@ -1,4 +1,4 @@
-package com.catorv.gallop.json;
+package com.catorv.gallop.dataformat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -10,7 +10,7 @@ import com.google.inject.Provides;
  * JSON Module
  * Created by cator on 8/1/16.
  */
-public class JsonModule extends AbstractModule {
+public class DataFormatModule extends AbstractModule {
 
 	@Override
 	protected void configure() {

@@ -4,9 +4,9 @@ import com.catorv.gallop.cache.Cache;
 import com.catorv.gallop.cache.CacheManager;
 import com.catorv.gallop.cache.CacheModule;
 import com.catorv.gallop.cfg.ConfigurationModule;
+import com.catorv.gallop.dataformat.DataFormatModule;
 import com.catorv.gallop.inject.Namespace;
 import com.catorv.gallop.inject.PrivateNamedModule;
-import com.catorv.gallop.json.JsonModule;
 import com.catorv.gallop.lifecycle.LifecycleModule;
 import com.catorv.gallop.log.LoggerModule;
 import com.catorv.gallop.memcached.MemcachedModule;
@@ -63,7 +63,7 @@ public class CacheManagerPrivateModuleTest extends AbstractModule {
 	protected void configure() {
 		install(new LifecycleModule());
 		install(new LoggerModule());
-		install(new JsonModule());
+		install(new DataFormatModule());
 		install(new TestPrivateModule("default"));
 		install(new TestPrivateModule("test"));
 	}

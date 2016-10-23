@@ -4,7 +4,7 @@ import com.catorv.gallop.cache.Cache;
 import com.catorv.gallop.cache.CacheConfiguration;
 import com.catorv.gallop.cache.adapter.RedisClientAdapterBuilder;
 import com.catorv.gallop.cfg.ConfigurationModule;
-import com.catorv.gallop.json.JsonModule;
+import com.catorv.gallop.dataformat.DataFormatModule;
 import com.catorv.gallop.log.LoggerModule;
 import com.catorv.gallop.redis.RedisModule;
 import com.catorv.gallop.test.junit.GuiceTestRunner;
@@ -27,7 +27,7 @@ public class RedisClientAdapterTest extends CacheAdapterTestBase {
 		try {
 			this.install(new LoggerModule());
 			this.install(new ConfigurationModule());
-			this.install(new JsonModule());
+			this.install(new DataFormatModule());
 			this.install(new RedisModule());
 			this.bind(RedisClientAdapterBuilder.class);
 		} catch (Exception e) {
