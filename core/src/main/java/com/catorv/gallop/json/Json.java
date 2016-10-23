@@ -99,8 +99,21 @@ public final class Json {
 			return read(objectMapper.readerFor(type));
 		}
 
+		public <K, V> Map<K, V> toMap(Class<K> keyClass, Class<V> valueClass)
+				throws IOException {
+			JavaType type = objectMapper.getTypeFactory()
+					.constructMapType(HashMap.class, keyClass, valueClass);
+			return read(objectMapper.readerFor(type));
+		}
+
 		public <K, V> Map<K, V> toMap() throws IOException {
 			final TypeReference<HashMap> type = new TypeReference<HashMap>() {};
+			return read(objectMapper.readerFor(type));
+		}
+
+		public <E> List<E> toList(Class<E> elementClass) throws IOException {
+			JavaType type = objectMapper.getTypeFactory()
+					.constructCollectionType(ArrayList.class, elementClass);
 			return read(objectMapper.readerFor(type));
 		}
 

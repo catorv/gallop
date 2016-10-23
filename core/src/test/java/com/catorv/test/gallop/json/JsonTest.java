@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.catorv.test.gallop.json.TestData.*;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -74,9 +75,40 @@ public class JsonTest {
 		assertEquals(123, map.get("integer"));
 		assertEquals("s1", map.get("string"));
 
-		List<String> cities = Json.of(getCitiesString()).toList();
-		assertEquals(3, cities.size());
+		Map map1 = Json.of(getMapString2()).toMap();
+		assertEquals(2, map1.size());
+		assertTrue(map1.get("obj1") instanceof Map);
+		assertEquals(123, ((Integer) ((Map) map1.get("obj1")).get("integer")).intValue());
+		assertEquals(223, ((Integer) ((Map) map1.get("obj2")).get("integer")).intValue());
 
+		Map map2 = Json.of(getMapString2()).toMap(String.class, JsonBean.class);
+		assertEquals(2, map1.size());
+		assertTrue(map2.get("obj1") instanceof JsonBean);
+		assertEquals(123, ((JsonBean) map2.get("obj1")).getInteger().intValue());
+		assertEquals(223, ((JsonBean) map2.get("obj2")).getInteger().intValue());
+	}
+
+	@Test
+	public void testToList() throws Exception {
+		List cities = Json.of(getCitiesString()).toList();
+		assertEquals(3, cities.size());
+		assertTrue(cities.get(0) instanceof String);
+
+		List beanList = Json.of(getBeansString()).toList();
+		assertEquals(2, beanList.size());
+		assertTrue(beanList.get(0) instanceof Map);
+		assertEquals(123, ((Integer) ((Map) beanList.get(0)).get("integer")).intValue());
+		assertEquals(223, ((Integer) ((Map) beanList.get(1)).get("integer")).intValue());
+
+		List beanList2 = Json.of(getBeansString()).toList(JsonBean.class);
+		assertEquals(2, beanList2.size());
+		assertTrue(beanList2.get(0) instanceof JsonBean);
+		assertEquals(123, ((JsonBean) beanList2.get(0)).getInteger().intValue());
+		assertEquals(223, ((JsonBean) beanList2.get(1)).getInteger().intValue());
+	}
+
+	@Test
+	public void testToArray() throws Exception {
 		String[] strings = Json.of(getCitiesString()).toArray(String.class);
 		assertEquals(3, strings.length);
 
