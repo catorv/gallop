@@ -1,4 +1,4 @@
-package com.catorv.test.gallop.json;
+package com.catorv.test.gallop.dataformat;
 
 import com.catorv.gallop.dataformat.DataFormatModule;
 import com.catorv.gallop.test.junit.GuiceModule;

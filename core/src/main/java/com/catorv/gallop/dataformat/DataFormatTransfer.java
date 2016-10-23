@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.type.ArrayType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -20,72 +21,79 @@ import java.util.Map;
  */
 public class DataFormatTransfer {
 
+	private ObjectMapper objectMapper;
 	private Object object;
 
-	DataFormatTransfer(Object object) {
+	DataFormatTransfer(Object object, ObjectMapper objectMapper) {
 		this.object = object;
+		this.objectMapper = objectMapper;
 	}
 
 	public String toString() {
-		return Json.string(object);
+		try {
+			return objectMapper.writer().writeValueAsString(object);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public byte[] toBytes() throws JsonProcessingException {
-		return Json.objectMapper.writer().writeValueAsBytes(object);
+		return objectMapper.writer().writeValueAsBytes(object);
 	}
 
 	public DataFormatTransfer to(File file) throws IOException {
-		Json.objectMapper.writer().writeValue(file, object);
+		objectMapper.writer().writeValue(file, object);
 		return this;
 	}
 
 	public DataFormatTransfer to(OutputStream outputStream) throws IOException {
-		Json.objectMapper.writer().writeValue(outputStream, object);
+		objectMapper.writer().writeValue(outputStream, object);
 		return this;
 	}
 
 	public DataFormatTransfer to(Writer writer) throws IOException {
-		Json.objectMapper.writer().writeValue(writer, object);
+		objectMapper.writer().writeValue(writer, object);
 		return this;
 	}
 
 	public <T> T to(Class<T> clazz) throws IOException {
-		return read(Json.objectMapper.readerFor(clazz));
+		return read(objectMapper.readerFor(clazz));
 	}
 
 	public <T> T to(JavaType type) throws IOException {
-		return read(Json.objectMapper.readerFor(type));
+		return read(objectMapper.readerFor(type));
 	}
 
 	public <K, V> Map<K, V> toMap(Class<K> keyClass, Class<V> valueClass)
 			throws IOException {
-		JavaType type = Json.objectMapper.getTypeFactory()
+		JavaType type = objectMapper.getTypeFactory()
 				.constructMapType(HashMap.class, keyClass, valueClass);
-		return read(Json.objectMapper.readerFor(type));
+		return read(objectMapper.readerFor(type));
 	}
 
 	public <K, V> Map<K, V> toMap() throws IOException {
 		final TypeReference<HashMap> type = new TypeReference<HashMap>() {
 		};
-		return read(Json.objectMapper.readerFor(type));
+		return read(objectMapper.readerFor(type));
 	}
 
 	public <E> List<E> toList(Class<E> elementClass) throws IOException {
-		JavaType type = Json.objectMapper.getTypeFactory()
+		JavaType type = objectMapper.getTypeFactory()
 				.constructCollectionType(ArrayList.class, elementClass);
-		return read(Json.objectMapper.readerFor(type));
+		return read(objectMapper.readerFor(type));
 	}
 
 	public <E> List<E> toList() throws IOException {
 		final TypeReference<ArrayList> type = new TypeReference<ArrayList>() {
 		};
-		return read(Json.objectMapper.readerFor(type));
+		return read(objectMapper.readerFor(type));
 	}
 
 	public <E> E[] toArray(Class<E> elementClass) throws IOException {
 		final TypeFactory typeFactory = TypeFactory.defaultInstance();
 		final ArrayType type = typeFactory.constructArrayType(elementClass);
-		return read(Json.objectMapper.readerFor(type));
+		return read(objectMapper.readerFor(type));
 	}
 
 	public Object[] toArray() throws IOException {

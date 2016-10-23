@@ -6,46 +6,47 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
-import java.util.*;
+import java.util.BitSet;
 
 /**
  * Created by cator on 9/3/16.
  */
-public final class Json {
+public final class Xml {
 
-	public static ObjectMapper objectMapper;
+	public static XmlMapper xmlMapper;
 
 	static {
-		objectMapper = new ObjectMapper();
-		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		SimpleModule module = new SimpleModule("JsonModule", new Version(1, 0,
+		xmlMapper = new XmlMapper();
+		xmlMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+		xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		SimpleModule module = new SimpleModule("XmlModule", new Version(1, 0,
 				0, null, null, null));
 		module.addSerializer(new BitSetSerializer());
 		module.addDeserializer(BitSet.class, new BitSetDeserializer());
-		objectMapper.registerModule(module);
+		xmlMapper.registerModule(module);
 	}
 
 	public static ObjectReader reader(Class<?> type) {
-		return objectMapper.readerFor(type);
+		return xmlMapper.readerFor(type);
 	}
 
 	public static ObjectReader reader(TypeReference<?> type) {
-		return objectMapper.readerFor(type);
+		return xmlMapper.readerFor(type);
 	}
 
 	public static ObjectReader reader(JavaType type) {
-		return objectMapper.readerFor(type);
+		return xmlMapper.readerFor(type);
 	}
 
 	public static ObjectWriter writer() {
-		return objectMapper.writer();
+		return xmlMapper.writer();
 	}
 
 	public static String string(Object object) {
 		try {
-			return objectMapper.writer().writeValueAsString(object);
+			return xmlMapper.writer().writeValueAsString(object);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
@@ -57,7 +58,7 @@ public final class Json {
 	 * @return Json Transfer
 	 */
 	public static DataFormatTransfer of(Object source) {
-		return new DataFormatTransfer(source, objectMapper);
+		return new DataFormatTransfer(source, xmlMapper);
 	}
 
 }

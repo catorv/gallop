@@ -1,4 +1,4 @@
-package com.catorv.test.gallop.json;
+package com.catorv.test.gallop.dataformat;
 
 import com.catorv.gallop.dataformat.Json;
 import com.fasterxml.jackson.databind.JavaType;
@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Map;
 
-import static com.catorv.test.gallop.json.TestData.*;
+import static com.catorv.test.gallop.dataformat.TestData.*;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -115,5 +115,10 @@ public class JsonTest {
 		Object[] objects = Json.of(getCitiesString()).toArray();
 		assertEquals(3, objects.length);
 		assertEquals(String.class, objects[0].getClass());
+
+		JsonBean[] array = Json.of(getBeansString()).toArray(JsonBean.class);
+		assertEquals(2, array.length);
+		assertEquals(123, array[0].getInteger().intValue());
+		assertEquals(223, array[1].getInteger().intValue());
 	}
 }

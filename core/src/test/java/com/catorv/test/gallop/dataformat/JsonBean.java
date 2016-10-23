@@ -1,4 +1,4 @@
-package com.catorv.test.gallop.json;
+package com.catorv.test.gallop.dataformat;
 
 import java.util.BitSet;
 
