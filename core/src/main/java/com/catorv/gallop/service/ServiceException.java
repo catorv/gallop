@@ -72,6 +72,34 @@ public abstract class ServiceException extends Exception {
 		return new E(code, getMessage(), cause);
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		final String message = getMessage();
+		int result = code;
+		result = prime * result + ((message == null) ? 0 : message.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (obj instanceof ServiceException) {
+			ServiceException serviceException = (ServiceException) obj;
+			return getCode() == serviceException.getCode();
+		}
+		return false;
+	}
+
+	public boolean fullEquals(ServiceException other) {
+		if (!equals(other)) return false;
+		final String message1 = getMessage();
+		final String message2 = other.getMessage();
+		return !(message1 == null && message2 == null)
+				&& !(message1 == null || message2 == null)
+				&& message1.equals(message2);
+	}
+
 	public static void throwException(Exception e, @Nullable CodeMessagePair... pairs)
 			throws ServiceException {
 		if (e instanceof ServiceException) {
