@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -42,7 +43,7 @@ public class HttpClientExecutor {
 	@Inject
 	private RequestConfig defaultRequestConfig;
 
-	private String url;
+	private URI uri;
 	private HttpRequestBase request;
 	private HttpContext context;
 
@@ -56,32 +57,64 @@ public class HttpClientExecutor {
 		return getBuilder(url, new HttpGet());
 	}
 
+	public Builder doGet(URI uri) throws URISyntaxException {
+		return getBuilder(uri, new HttpGet());
+	}
+
 	public Builder doPost(String url) throws URISyntaxException {
 		return getBuilder(url, new HttpPost());
+	}
+
+	public Builder doPost(URI uri) throws URISyntaxException {
+		return getBuilder(uri, new HttpPost());
 	}
 
 	public Builder doDelete(String url) throws URISyntaxException {
 		return getBuilder(url, new HttpDelete());
 	}
 
+	public Builder doDelete(URI uri) throws URISyntaxException {
+		return getBuilder(uri, new HttpDelete());
+	}
+
 	public Builder doPut(String url) throws URISyntaxException {
 		return getBuilder(url, new HttpPut());
+	}
+
+	public Builder doPut(URI uri) throws URISyntaxException {
+		return getBuilder(uri, new HttpPut());
 	}
 
 	public Builder doHead(String url) throws URISyntaxException {
 		return getBuilder(url, new HttpHead());
 	}
 
+	public Builder doHead(URI uri) throws URISyntaxException {
+		return getBuilder(uri, new HttpHead());
+	}
+
 	public Builder doTrace(String url) throws URISyntaxException {
 		return getBuilder(url, new HttpTrace());
+	}
+
+	public Builder doTrace(URI uri) throws URISyntaxException {
+		return getBuilder(uri, new HttpTrace());
 	}
 
 	public Builder doOptions(String url) throws URISyntaxException {
 		return getBuilder(url, new HttpOptions());
 	}
 
+	public Builder doOptions(URI uri) throws URISyntaxException {
+		return getBuilder(uri, new HttpOptions());
+	}
+
 	private Builder getBuilder(String url, HttpRequestBase request) throws URISyntaxException {
-		this.url = url;
+		return getBuilder(URI.create(url), request);
+	}
+
+	private Builder getBuilder(URI uri, HttpRequestBase request) throws URISyntaxException {
+		this.uri = uri;
 		this.request = request;
 		this.context = new BasicHttpContext();
 		return new Builder(this);
@@ -119,7 +152,7 @@ public class HttpClientExecutor {
 
 		public Builder(HttpClientExecutor executor) throws URISyntaxException {
 			this.executor = executor;
-			uriBuilder = new URIBuilder(executor.url);
+			uriBuilder = new URIBuilder(executor.uri);
 			cookieStore = new BasicCookieStore();
 		}
 
