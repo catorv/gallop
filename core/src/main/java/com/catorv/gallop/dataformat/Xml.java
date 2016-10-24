@@ -15,12 +15,13 @@ import java.util.BitSet;
  */
 public final class Xml {
 
-	public static XmlMapper objectMapper;
+	public static final XmlMapper objectMapper;
 
 	static {
 		objectMapper = new XmlMapper();
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		objectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
 		SimpleModule module = new SimpleModule("XmlModule", new Version(1, 0,
 				0, null, null, null));
 		module.addSerializer(new BitSetSerializer());

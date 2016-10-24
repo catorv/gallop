@@ -14,12 +14,13 @@ import java.util.*;
  */
 public final class Json {
 
-	public static ObjectMapper objectMapper;
+	public static final ObjectMapper objectMapper;
 
 	static {
 		objectMapper = new ObjectMapper();
 		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		objectMapper.configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false);
 		SimpleModule module = new SimpleModule("JsonModule", new Version(1, 0,
 				0, null, null, null));
 		module.addSerializer(new BitSetSerializer());
