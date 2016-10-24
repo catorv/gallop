@@ -17,12 +17,11 @@ public abstract class JerseyModule extends AbstractModule {
 
 	@Override
 	protected void configure() {
-		resourceConfig = new ResourceConfig();
-		configureJersey(resourceConfig);
+		resourceConfig = createResourceConfig();
 		bind(ResourceConfig.class).toInstance(resourceConfig);
 	}
 
-	protected abstract void configureJersey(ResourceConfig resourceConfig);
+	protected abstract ResourceConfig createResourceConfig();
 
 	@Provides
 	private HttpServer getHttpServer(HttpServerConfiguration config,

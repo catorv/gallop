@@ -22,8 +22,10 @@ public class JerseyModuleTest extends AbstractModule {
 		install(new LoggerModule());
 		install(new JerseyModule() {
 			@Override
-			protected void configureJersey(ResourceConfig resourceConfig) {
+			protected ResourceConfig createResourceConfig() {
+				ResourceConfig resourceConfig = new ResourceConfig();
 				resourceConfig.packages("com.catorv.gallop.rs.resource");
+				return resourceConfig;
 			}
 		});
 	}
