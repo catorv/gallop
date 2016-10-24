@@ -1,12 +1,13 @@
 package com.catorv.gallop.database.jdbc;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.catorv.gallop.cfg.ConfigurationBuilder;
 import com.catorv.gallop.lifecycle.Destroy;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.sql.DataSource;
 import java.io.Closeable;
@@ -35,15 +36,16 @@ public class DataSourceProvider implements Closeable, Provider<DataSource> {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		Preconditions.checkNotNull(dataSource);
 		dataSources.put(jndi, dataSource);
 		return dataSource;
 	}
 
-	private DruidDataSource buildDataSource(String jndi) throws SQLException {
+	private BasicDataSource buildDataSource(String jndi) throws SQLException {
 		DataSourceConfiguration config = configBuilder.build(jndi.replace("/", "."),
 				DataSourceConfiguration.class);
 
-		DruidDataSource ds = new DruidDataSource();
+		BasicDataSource ds = new BasicDataSource();
 
 		String driver = config.getDriver();
 		if (Strings.isNullOrEmpty(driver)) {
@@ -56,28 +58,23 @@ public class DataSourceProvider implements Closeable, Provider<DataSource> {
 
 		int maxSize = Math.max(1, config.getMaxActive());
 		ds.setInitialSize(Math.min(maxSize, config.getInitialSize()));
-		ds.setMaxActive(maxSize);
+		ds.setMaxTotal(maxSize);
 		ds.setMinIdle(Math.min(maxSize, Math.max(0, config.getMinIdle())));
-		ds.setMaxWait(config.getMaxWait());
 
-		ds.setRemoveAbandoned(config.getRemoveAbandoned());
+		ds.setRemoveAbandonedOnBorrow(config.isRemoveAbandonedOnBorrow());
 		ds.setRemoveAbandonedTimeout(config.getRemoveAbandonedTimeout());
-		ds.setLogAbandoned(config.getLogAbandoned());
-
-//		ds.setFilters("stat,slf4j");
+		ds.setRemoveAbandonedOnMaintenance(config.isRemoveAbandonedOnMaintenance());
+		ds.setLogAbandoned(config.isLogAbandoned());
 
 		ds.setTimeBetweenEvictionRunsMillis(config.getTimeBetweenEvictionRunsMillis());
 		ds.setMinEvictableIdleTimeMillis(config.getMinEvictableIdleTimeMillis());
 
-		ds.setTestOnBorrow(config.getTestOnBorrow());
-		ds.setTestOnReturn(config.getTestOnReturn());
-		ds.setTestWhileIdle(config.getTestWhileIdle());
+		ds.setTestOnBorrow(config.isTestOnBorrow());
+		ds.setTestOnReturn(config.isTestOnReturn());
+		ds.setTestWhileIdle(config.isTestWhileIdle());
 
-		ds.setDefaultAutoCommit(config.getDefaultAutoCommit());
-		ds.setDefaultReadOnly(config.getDefaultReadOnly());
-
-//		ds.setPoolPreparedStatements(false);
-//		ds.setMaxPoolPreparedStatementPerConnectionSize(20);
+		ds.setDefaultAutoCommit(config.isDefaultAutoCommit());
+		ds.setDefaultReadOnly(config.isDefaultReadOnly());
 
 		ds.setValidationQuery(config.getValidationQuery());
 
@@ -98,7 +95,11 @@ public class DataSourceProvider implements Closeable, Provider<DataSource> {
 	@Destroy
 	public synchronized void close() throws IOException {
 		for (DataSource ds : dataSources.values()) {
-			((DruidDataSource) ds).close();
+			try {
+				((BasicDataSource) ds).close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -106,4 +107,5 @@ public class DataSourceProvider implements Closeable, Provider<DataSource> {
 	public DataSource get() {
 		return getDataSource(null);
 	}
+
 }

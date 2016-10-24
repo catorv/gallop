@@ -5,7 +5,6 @@ import com.catorv.gallop.database.DatabaseModule;
 import com.catorv.gallop.lifecycle.LifecycleModule;
 import com.catorv.gallop.test.junit.GuiceModule;
 import com.catorv.gallop.test.junit.GuiceTestRunner;
-import com.catorv.gallop.test.junit.MultiThreaded;
 import com.google.inject.Inject;
 import com.google.inject.persist.Transactional;
 import org.junit.Assert;
@@ -21,7 +20,6 @@ import java.util.concurrent.atomic.AtomicLong;
 		LifecycleModule.class,
 		DatabaseModule.class
 })
-@MultiThreaded(numThreads = 10)
 public class ExampleEntityTransactionalNestedTest {
 
 	@Inject

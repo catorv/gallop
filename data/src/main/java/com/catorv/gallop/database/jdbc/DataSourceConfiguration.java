@@ -15,24 +15,24 @@ public class DataSourceConfiguration {
 	private String driver;
 	private String initSqls;
 
-	private Integer initialSize = 0;
-	private Integer maxActive = 8;
-	private Integer minIdle = 0;
-	private Long maxWait = 30 * 1000L;
+	private int initialSize = 20;
+	private int maxActive = 50;
+	private int minIdle = 5;
 
-	private Boolean removeAbandoned = false;
-	private Integer removeAbandonedTimeout = 300;
-	private Boolean logAbandoned = false;
+	private boolean removeAbandonedOnBorrow = true;
+	private boolean removeAbandonedOnMaintenance = true;
+	private int removeAbandonedTimeout = 1800;
+	private boolean logAbandoned = true;
 
-	private Long timeBetweenEvictionRunsMillis = 60 * 1000L;
-	private Long minEvictableIdleTimeMillis = 30 * 60 * 1000L;
+	private long timeBetweenEvictionRunsMillis = 60 * 1000L;
+	private long minEvictableIdleTimeMillis = 30 * 60 * 1000L;
 
-	private Boolean testOnBorrow = false;
-	private Boolean testOnReturn = false;
-	private Boolean testWhileIdle = true;
+	private boolean testOnBorrow = true;
+	private boolean testOnReturn = true;
+	private boolean testWhileIdle = true;
 
-	private Boolean defaultAutoCommit = true;
-	private Boolean defaultReadOnly = false;
+	private boolean defaultAutoCommit = true;
+	private boolean defaultReadOnly = false;
 	private String validationQuery = "select 1";
 
 	public String getConnectionUrl() {
@@ -75,115 +75,115 @@ public class DataSourceConfiguration {
 		this.initSqls = initSqls;
 	}
 
-	public Integer getInitialSize() {
+	public int getInitialSize() {
 		return initialSize;
 	}
 
-	public void setInitialSize(Integer initialSize) {
+	public void setInitialSize(int initialSize) {
 		this.initialSize = initialSize;
 	}
 
-	public Integer getMaxActive() {
+	public int getMaxActive() {
 		return maxActive;
 	}
 
-	public void setMaxActive(Integer maxActive) {
+	public void setMaxActive(int maxActive) {
 		this.maxActive = maxActive;
 	}
 
-	public Integer getMinIdle() {
+	public int getMinIdle() {
 		return minIdle;
 	}
 
-	public void setMinIdle(Integer minIdle) {
+	public void setMinIdle(int minIdle) {
 		this.minIdle = minIdle;
 	}
 
-	public Long getMaxWait() {
-		return maxWait;
+	public boolean isRemoveAbandonedOnBorrow() {
+		return removeAbandonedOnBorrow;
 	}
 
-	public void setMaxWait(Long maxWait) {
-		this.maxWait = maxWait;
+	public void setRemoveAbandonedOnBorrow(boolean removeAbandonedOnBorrow) {
+		this.removeAbandonedOnBorrow = removeAbandonedOnBorrow;
 	}
 
-	public Boolean getRemoveAbandoned() {
-		return removeAbandoned;
+	public boolean isRemoveAbandonedOnMaintenance() {
+		return removeAbandonedOnMaintenance;
 	}
 
-	public void setRemoveAbandoned(Boolean removeAbandoned) {
-		this.removeAbandoned = removeAbandoned;
+	public void setRemoveAbandonedOnMaintenance(boolean removeAbandonedOnMaintenance) {
+		this.removeAbandonedOnMaintenance = removeAbandonedOnMaintenance;
 	}
 
-	public Integer getRemoveAbandonedTimeout() {
+	public int getRemoveAbandonedTimeout() {
 		return removeAbandonedTimeout;
 	}
 
-	public void setRemoveAbandonedTimeout(Integer removeAbandonedTimeout) {
+	public void setRemoveAbandonedTimeout(int removeAbandonedTimeout) {
 		this.removeAbandonedTimeout = removeAbandonedTimeout;
 	}
 
-	public Boolean getLogAbandoned() {
+	public boolean isLogAbandoned() {
 		return logAbandoned;
 	}
 
-	public void setLogAbandoned(Boolean logAbandoned) {
+	public void setLogAbandoned(boolean logAbandoned) {
 		this.logAbandoned = logAbandoned;
 	}
 
-	public Long getTimeBetweenEvictionRunsMillis() {
+	public long getTimeBetweenEvictionRunsMillis() {
 		return timeBetweenEvictionRunsMillis;
 	}
 
-	public void setTimeBetweenEvictionRunsMillis(Long timeBetweenEvictionRunsMillis) {
+	public void setTimeBetweenEvictionRunsMillis(long timeBetweenEvictionRunsMillis) {
 		this.timeBetweenEvictionRunsMillis = timeBetweenEvictionRunsMillis;
 	}
 
-	public Long getMinEvictableIdleTimeMillis() {
+	public long getMinEvictableIdleTimeMillis() {
 		return minEvictableIdleTimeMillis;
 	}
 
-	public void setMinEvictableIdleTimeMillis(Long minEvictableIdleTimeMillis) {
+	public void setMinEvictableIdleTimeMillis(long minEvictableIdleTimeMillis) {
 		this.minEvictableIdleTimeMillis = minEvictableIdleTimeMillis;
 	}
 
-	public Boolean getTestOnBorrow() {
+	public boolean isTestOnBorrow() {
 		return testOnBorrow;
 	}
 
-	public void setTestOnBorrow(Boolean testOnBorrow) {
+	public void setTestOnBorrow(boolean testOnBorrow) {
 		this.testOnBorrow = testOnBorrow;
 	}
 
-	public Boolean getTestOnReturn() {
+	public boolean isTestOnReturn() {
 		return testOnReturn;
 	}
 
-	public void setTestOnReturn(Boolean testOnReturn) {
+	public void setTestOnReturn(boolean testOnReturn) {
 		this.testOnReturn = testOnReturn;
 	}
 
-	public Boolean getTestWhileIdle() {
+	public boolean isTestWhileIdle() {
 		return testWhileIdle;
 	}
 
-	public void setTestWhileIdle(Boolean testWhileIdle) {
+	public void setTestWhileIdle(boolean testWhileIdle) {
 		this.testWhileIdle = testWhileIdle;
 	}
 
-	public Boolean getDefaultAutoCommit() {
+	public boolean isDefaultAutoCommit() {
 		return defaultAutoCommit;
 	}
 
-	public void setDefaultAutoCommit(Boolean defaultAutoCommit) {
+	public void setDefaultAutoCommit(boolean defaultAutoCommit) {
 		this.defaultAutoCommit = defaultAutoCommit;
 	}
 
-	public Boolean getDefaultReadOnly() {
+	public boolean isDefaultReadOnly() {
 		return defaultReadOnly;
 	}
 
-	public void setDefaultReadOnly(Boolean defaultReadOnly) {
+	public void setDefaultReadOnly(boolean defaultReadOnly) {
 		this.defaultReadOnly = defaultReadOnly;
 	}
 

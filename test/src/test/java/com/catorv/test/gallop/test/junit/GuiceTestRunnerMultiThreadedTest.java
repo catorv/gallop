@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -47,9 +48,11 @@ public class GuiceTestRunnerMultiThreadedTest extends AbstractModule {
 	}
 
 	@Test
-	public synchronized void testApp() {
+	public synchronized void testApp() throws InterruptedException {
 		Assert.assertEquals("abc", testField);
 		Assert.assertEquals("xyz", testField2);
-		System.out.println(testFieldNum + " OK");
+		long millis = Math.abs(new Random().nextLong()) % 3000;
+		Thread.sleep(millis);
+		System.out.println(testFieldNum + " OK in " + millis + "ms in " + Thread.currentThread());
 	}
 }

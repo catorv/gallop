@@ -11,16 +11,16 @@ import java.util.concurrent.TimeUnit;
  * Created by cator on 19/10/2016.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
+@Target({ElementType.TYPE}) // TODO: 实现基于类方法的多线程测试机制
 public @interface MultiThreaded {
 
 	/** 线程总数 */
 	int numThreads();
 
 	/** @see java.util.concurrent.ThreadPoolExecutor#ThreadPoolExecutor(int, int, long, TimeUnit, BlockingQueue) */
-	int corePoolSize() default Integer.MAX_VALUE;
+	int corePoolSize() default 10;
 
 	/** @see java.util.concurrent.ThreadPoolExecutor#ThreadPoolExecutor(int, int, long, TimeUnit, BlockingQueue) */
-	int maximumPoolSize() default Integer.MAX_VALUE;
+	int maximumPoolSize() default 100;
 
 }

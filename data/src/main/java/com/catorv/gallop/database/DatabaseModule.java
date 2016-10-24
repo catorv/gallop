@@ -52,7 +52,7 @@ public class DatabaseModule extends AbstractNamedModule {
 	}
 
 	@Override
-	protected void configure() {
+	protected synchronized void configure() {
 		bind(DataSourceProvider.class);
 		bind(DataSource.class).toProvider(DataSourceProvider.class);
 
@@ -67,6 +67,7 @@ public class DatabaseModule extends AbstractNamedModule {
 			properties.putAll(configProperties);
 		}
 		install(new JpaPersistModule(jpaUnit).properties(properties));
+
 		this.bind(JpaInitializer.class).asEagerSingleton();
 
 		// Query

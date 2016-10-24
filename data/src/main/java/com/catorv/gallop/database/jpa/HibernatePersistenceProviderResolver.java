@@ -1,6 +1,7 @@
 package com.catorv.gallop.database.jpa;
 
 import com.catorv.gallop.database.jdbc.DataSourceProvider;
+import com.google.common.base.Preconditions;
 
 import javax.inject.Inject;
 import javax.persistence.spi.PersistenceProvider;
@@ -31,6 +32,7 @@ public class HibernatePersistenceProviderResolver implements PersistenceProvider
 	@Override
 	public List<PersistenceProvider> getPersistenceProviders() {
 		if (cachedProviders == null) {
+			Preconditions.checkNotNull(dataSourceProvider);
 			cachedProviders = Arrays.asList(new PersistenceProvider[]{
 					new LocalDSHibernatePersistenceProvider(dataSourceProvider, properties)
 			});
