@@ -3,6 +3,7 @@ package com.catorv.gallop.httpclient;
 import com.google.inject.Inject;
 import org.apache.http.*;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -118,6 +119,14 @@ public class HttpClientExecutor {
 		this.request = request;
 		this.context = new BasicHttpContext();
 		return new Builder(this);
+	}
+
+	public HttpClient getHttpClient() {
+		return httpClient;
+	}
+
+	public RequestConfig getDefaultRequestConfig() {
+		return defaultRequestConfig;
 	}
 
 	public Response execute() throws IOException {

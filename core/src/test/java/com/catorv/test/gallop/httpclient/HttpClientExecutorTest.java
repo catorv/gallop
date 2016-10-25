@@ -7,6 +7,7 @@ import com.catorv.gallop.lifecycle.LifecycleModule;
 import com.catorv.gallop.test.junit.GuiceModule;
 import com.catorv.gallop.test.junit.GuiceTestRunner;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,9 +30,23 @@ public class HttpClientExecutorTest {
 	@Inject
 	private HttpClientExecutor executor;
 
+	@Inject
+	private Provider<HttpClientExecutor> httpClientExecutorProvider;
+
 	@Test
 	public void test() throws URISyntaxException, IOException {
 		String string = executor.doGet("http://www.baidu.com")
+				.parameter("wd", "haha")
+				.execute()
+				.returnString();
+
+		Assert.assertTrue(string.length() > 0);
+	}
+
+	@Test
+	public void testFromProvider() throws URISyntaxException, IOException {
+		HttpClientExecutor executor1 = httpClientExecutorProvider.get();
+		String string = executor1.doGet("http://www.baidu.com")
 				.parameter("wd", "haha")
 				.execute()
 				.returnString();

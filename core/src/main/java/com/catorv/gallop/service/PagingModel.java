@@ -8,31 +8,31 @@ import java.util.Collection;
 /**
  * Created by cator on 22/10/2016.
  */
-public class PagingModel<P> {
+public class PagingModel<T> {
 
-	private Collection<P> list;
+	private Collection<T> list;
 	private int total;
 
 	public PagingModel() {
-		this(new ArrayList<P>());
+		this(new ArrayList<T>());
 	}
 
-	public PagingModel(Collection<P> list, int total) {
+	public PagingModel(Collection<T> list, int total) {
 		Preconditions.checkNotNull(list);
 		this.list = list;
 		this.total = total;
 	}
 
-	public PagingModel(Collection<P> list) {
+	public PagingModel(Collection<T> list) {
 		this.list = list;
 		this.total = -1;
 	}
 
-	public Collection<P> getList() {
+	public Collection<T> getList() {
 		return list;
 	}
 
-	public void setList(Collection<P> list) {
+	public void setList(Collection<T> list) {
 		this.list = list;
 	}
 
