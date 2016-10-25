@@ -52,8 +52,7 @@ public class DatabaseModule extends AbstractNamedModule {
 	}
 
 	@Override
-	protected synchronized void configure() {
-		bind(DataSourceProvider.class);
+	protected void configure() {
 		bind(DataSource.class).toProvider(DataSourceProvider.class);
 
 		PersistenceProviderResolver ppr = new HibernatePersistenceProviderResolver();

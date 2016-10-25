@@ -1,6 +1,6 @@
 package com.catorv.gallop.database.jpa;
 
-import com.catorv.gallop.database.jdbc.DataSourceProvider;
+import com.catorv.gallop.database.jdbc.DruidDataSourceProvider;
 import com.google.common.base.Preconditions;
 
 import javax.inject.Inject;
@@ -17,7 +17,7 @@ import java.util.Properties;
 public class HibernatePersistenceProviderResolver implements PersistenceProviderResolver {
 
 	@Inject
-	private DataSourceProvider dataSourceProvider;
+	private DruidDataSourceProvider dataSourceProvider;
 
 	@Inject
 	private Properties properties;
