@@ -2,6 +2,7 @@ package com.catorv.gallop.database;
 
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import org.hibernate.Session;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ import java.util.*;
 public class EntityDAO<T> {
 
 	@Inject
-	private EntityManager entityManager;
+	private Provider<EntityManager> emp;
 
 	private Class<T> entityClass;
 
@@ -32,7 +33,7 @@ public class EntityDAO<T> {
 	//
 
 	public EntityManager getEntityManager() {
-		return entityManager;
+		return emp.get();
 	}
 
 	public Class<T> getEntityClass() {
@@ -40,7 +41,7 @@ public class EntityDAO<T> {
 	}
 
 	private Session getSession() {
-		return (Session) entityManager.getDelegate();
+		return (Session) getEntityManager().getDelegate();
 	}
 
 	//
@@ -102,7 +103,7 @@ public class EntityDAO<T> {
 		CriteriaQuery<Long> query = cb.createQuery(Long.class);
 		Root<T> entity = query.from(entityClass);
 		query.select(cb.count(entity));
-		return entityManager.createQuery(query).getSingleResult();
+		return getEntityManager().createQuery(query).getSingleResult();
 	}
 
 	public List<T> listByNamedQuery(String queryName,

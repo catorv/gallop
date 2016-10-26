@@ -35,7 +35,7 @@ public class BasicMessage<T> implements Message<T> {
 
 	@Override
 	public Session getSession() {
-		return null;
+		return session;
 	}
 
 	@Override
