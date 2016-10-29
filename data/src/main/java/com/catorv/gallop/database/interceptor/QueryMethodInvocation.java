@@ -75,7 +75,7 @@ class QueryMethodInvocation {
 			final Integer limit = (Integer) arguments[i];
 			if (start >= 0 && limit > 0) {
 				query.setFirstResult(start);
-				query.setMaxResults(start + limit);
+				query.setMaxResults(limit);
 			}
 		}
 
@@ -123,7 +123,7 @@ class QueryMethodInvocation {
 			final Integer limit = (Integer) arguments[i];
 			if (start >= 0 && limit > 0) {
 				typeQuery.setFirstResult(start);
-				typeQuery.setMaxResults(start + limit);
+				typeQuery.setMaxResults(limit);
 			}
 		}
 

@@ -93,7 +93,7 @@ public class EntityDAO<T> {
 		TypedQuery<T> typedQuery = createQuery(query);
 		if (start >= 0 && limit > 0) {
 			typedQuery.setFirstResult(start);
-			typedQuery.setMaxResults(start + limit);
+			typedQuery.setMaxResults(limit);
 		}
 		return typedQuery.getResultList();
 	}
@@ -140,7 +140,7 @@ public class EntityDAO<T> {
 		TypedQuery<T> typedQuery = createQuery(query);
 		if (start >= 0 && limit > 0) {
 			typedQuery.setFirstResult(start);
-			typedQuery.setMaxResults(start + limit);
+			typedQuery.setMaxResults(limit);
 		}
 		return typedQuery.getResultList();
 	}
