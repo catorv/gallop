@@ -1,30 +1,29 @@
 package com.catorv.gallop.database.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 /**
- * Abstract Assigned Id Entity
+ * Abstract Entity
  * Created by cator on 8/11/16.
  */
 @MappedSuperclass
-public class AbstractAssignedIdEntity implements Entity {
+public class AbstractEmptyEntity implements Entity {
 
-	private static final long serialVersionUID = -2649356894400720813L;
+	private static final long serialVersionUID = 5800912977708114323L;
 
 	@Id
+	@GeneratedValue(generator = "UUID25GeneratorEmpty")
+	@GenericGenerator(
+			name = "UUID25GeneratorEmpty",
+			strategy = "com.catorv.gallop.database.entity.UUID25Generator"
+	)
 	@Column(length = 40)
 	private String id;
-
-	@Column(length = 127)
-	private String name;
-
-	@Column(length = 255)
-	private String title;
-
-	@Column(length = 512, name = "description")
-	private String desc;
 
 	@Override
 	public String getId() {
@@ -34,30 +33,6 @@ public class AbstractAssignedIdEntity implements Entity {
 	@Override
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getDesc() {
-		return desc;
-	}
-
-	public void setDesc(String desc) {
-		this.desc = desc;
 	}
 
 	@Override
@@ -79,7 +54,7 @@ public class AbstractAssignedIdEntity implements Entity {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		AbstractAssignedIdEntity other = (AbstractAssignedIdEntity) obj;
+		AbstractEmptyEntity other = (AbstractEmptyEntity) obj;
 		if (id == null) {
 			if (other.id != null) {
 				return false;

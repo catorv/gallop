@@ -22,7 +22,7 @@ public class AbstractEntity implements Entity {
 			name = "UUID25Generator",
 			strategy = "com.catorv.gallop.database.entity.UUID25Generator"
 	)
-	@Column(length = 64)
+	@Column(length = 40)
 	private String id;
 
 	@Column(length = 127)

@@ -9,22 +9,13 @@ import javax.persistence.MappedSuperclass;
  * Created by cator on 8/11/16.
  */
 @MappedSuperclass
-public class AbstractAssignedIdEntity implements Entity {
+public class AbstractAssignedIdEmptyEntity implements Entity {
 
 	private static final long serialVersionUID = -2649356894400720813L;
 
 	@Id
 	@Column(length = 40)
 	private String id;
-
-	@Column(length = 127)
-	private String name;
-
-	@Column(length = 255)
-	private String title;
-
-	@Column(length = 512, name = "description")
-	private String desc;
 
 	@Override
 	public String getId() {
@@ -34,30 +25,6 @@ public class AbstractAssignedIdEntity implements Entity {
 	@Override
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getDesc() {
-		return desc;
-	}
-
-	public void setDesc(String desc) {
-		this.desc = desc;
 	}
 
 	@Override
@@ -79,7 +46,7 @@ public class AbstractAssignedIdEntity implements Entity {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		AbstractAssignedIdEntity other = (AbstractAssignedIdEntity) obj;
+		AbstractAssignedIdEmptyEntity other = (AbstractAssignedIdEmptyEntity) obj;
 		if (id == null) {
 			if (other.id != null) {
 				return false;
