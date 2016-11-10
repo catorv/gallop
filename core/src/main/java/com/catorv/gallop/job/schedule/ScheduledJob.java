@@ -17,16 +17,14 @@ public  class ScheduledJob implements Job {
 	public static final String DATAKEY_AUTO_SKIP = "autoSkip";
 	public static final String DATAKEY_METHOD = "method";
 
-	private static final Map<String, ReentrantLock> lockMap = new ConcurrentHashMap<>();
-	private static final Map<String, Integer> runningMap = new ConcurrentHashMap<>();
+	private static final Map<MethodInvocation, ReentrantLock> lockMap = new ConcurrentHashMap<>();
+	private static final Map<MethodInvocation, Integer> runningMap = new ConcurrentHashMap<>();
 
 	@Override
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		final JobDetail jobDetail = context.getJobDetail();
 		final JobDataMap dataMap = jobDetail.getJobDataMap();
-		final JobKey jobKey = jobDetail.getKey();
-		final String key = jobKey.getName() + "@" + jobKey.getGroup();
 
 		ReentrantLock lock = null;
 		MethodInvocation methodInvocation = null;
@@ -44,13 +42,13 @@ public  class ScheduledJob implements Job {
 				autoSkip = dataMap.getBooleanValue(DATAKEY_AUTO_SKIP);
 			}
 			//
-			if (runningMap.containsKey(key)) {
+			if (runningMap.containsKey(methodInvocation)) {
 				if (autoSkip) return;
 				//
-				Integer running = runningMap.get(key);
-				runningMap.put(key, running + 1);
+				Integer running = runningMap.get(methodInvocation);
+				runningMap.put(methodInvocation, running + 1);
 			} else {
-				runningMap.put(key, 0);
+				runningMap.put(methodInvocation, 0);
 			}
 
 			if (dataMap.containsKey(DATAKEY_AUTO_LOCK)) {
@@ -58,10 +56,10 @@ public  class ScheduledJob implements Job {
 			}
 			//
 			if (autoLock) {
-				lock = lockMap.get(key);
+				lock = lockMap.get(methodInvocation);
 				if (lock == null) {
 					lock = new ReentrantLock();
-					lockMap.put(key, lock);
+					lockMap.put(methodInvocation, lock);
 				}
 				lock.lock();
 			}
@@ -73,12 +71,12 @@ public  class ScheduledJob implements Job {
 			if (lock != null) {
 				lock.unlock();
 			}
-			if (runningMap.containsKey(key)) {
-				Integer running = runningMap.get(key);
+			if (runningMap.containsKey(methodInvocation)) {
+				Integer running = runningMap.get(methodInvocation);
 				if (running == 0) {
-					runningMap.remove(key);
+					runningMap.remove(methodInvocation);
 				} else {
-					runningMap.put(key, running - 1);
+					runningMap.put(methodInvocation, running - 1);
 				}
 			}
 		}
