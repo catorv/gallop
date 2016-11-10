@@ -25,13 +25,16 @@ import org.junit.runner.RunWith;
 public class ScheduleTest {
 
 	private int i = 0;
+	private int j = 0;
+	private int k = 0;
 
 	@Test
 	public void test() throws InterruptedException {
 		Thread.sleep(5000);
 
-		System.out.println(i);
 		Assert.assertEquals(2, i);
+		Assert.assertEquals(2, j);
+		Assert.assertEquals(5, k);
 	}
 
 	@Schedule("0/1 * * * * ? *")
@@ -43,5 +46,16 @@ public class ScheduleTest {
 	@Schedule("0/1 * * * * ? *")
 	public void job2() throws InterruptedException {
 		Thread.sleep(2000);
+	}
+
+	@Schedule(cron = "0/1 * * * * ? *", autoSkip = true)
+	public void job3() throws InterruptedException {
+		Thread.sleep(2000);
+		j++;
+	}
+
+	@Schedule(cron = "0/1 * * * * ? *", autoLock = false)
+	public void job4() throws InterruptedException {
+		k++;
 	}
 }

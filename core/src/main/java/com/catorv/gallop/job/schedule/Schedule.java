@@ -13,4 +13,5 @@ public @interface Schedule {
 	String group() default "default";
 	String desc() default "";
 	boolean autoLock() default true;
+	boolean autoSkip() default false;
 }

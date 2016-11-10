@@ -71,16 +71,16 @@ public class ScheduleManager {
 
 	public void schedule(String cronExpression,
 	                     MethodInvocation methodInvocation, String desc,
-	                     String group, boolean autoLock)
+	                     String group, boolean autoLock, boolean autoSkip)
 			throws SchedulerException {
 		Trigger trigger = buildTrigger(cronExpression, group);
-		JobDetail job = buildJob(methodInvocation, desc, group, autoLock);
+		JobDetail job = buildJob(methodInvocation, desc, group, autoLock, autoSkip);
 		scheduleJob(job, trigger);
 	}
 
 	public void schedule(String cronExpression, MethodInvocation methodInvocation)
 			throws SchedulerException {
-		schedule(cronExpression, methodInvocation, "", "default", true);
+		schedule(cronExpression, methodInvocation, "", "default", true, false);
 	}
 
 	public Trigger buildTrigger(String cronExpression, String group) {
@@ -93,7 +93,7 @@ public class ScheduleManager {
 	}
 
 	public JobDetail buildJob(MethodInvocation methodInvocation, String desc,
-	                          String group, boolean autoLock) {
+	                          String group, boolean autoLock, boolean autoSkip) {
 //		String name = DigestUtils.hash(methodInvocation.getMethod().toGenericString() + "@" + group);
 		String name = IDGenerator.nextJobID();
 		JobDetail job = JobBuilder.newJob(ScheduledJob.class)
@@ -104,6 +104,7 @@ public class ScheduleManager {
 		JobDataMap dataMap = job.getJobDataMap();
 		dataMap.put(ScheduledJob.DATAKEY_METHOD, methodInvocation);
 		dataMap.put(ScheduledJob.DATAKEY_AUTO_LOCK, autoLock);
+		dataMap.put(ScheduledJob.DATAKEY_AUTO_SKIP, autoSkip);
 
 		return job;
 	}

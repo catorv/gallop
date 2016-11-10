@@ -24,7 +24,8 @@ public class ScheduledJobListener implements TypeListener {
 					continue;
 				}
 				encounter.register(new ScheduledJobInjector<I>(scheduleManager, method,
-						schedule.desc(), cron, schedule.group(), schedule.autoLock()));
+						schedule.desc(), cron, schedule.group(), schedule.autoLock(),
+						schedule.autoSkip()));
 			}
 		}
 	}

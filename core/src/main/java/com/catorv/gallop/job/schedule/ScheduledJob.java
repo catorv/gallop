@@ -14,44 +14,55 @@ import java.util.concurrent.locks.ReentrantLock;
 public  class ScheduledJob implements Job {
 
 	public static final String DATAKEY_AUTO_LOCK = "autoLock";
+	public static final String DATAKEY_AUTO_SKIP = "autoSkip";
 	public static final String DATAKEY_METHOD = "method";
 
 	private static final Map<String, ReentrantLock> lockMap = new ConcurrentHashMap<>();
+	private static final Map<String, Integer> runningMap = new ConcurrentHashMap<>();
 
 	@Override
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		ReentrantLock lock = null;
-		try {
-			JobDetail jobDetail = context.getJobDetail();
-			JobDataMap dataMap = jobDetail.getJobDataMap();
+		final JobDetail jobDetail = context.getJobDetail();
+		final JobDataMap dataMap = jobDetail.getJobDataMap();
+		final JobKey jobKey = jobDetail.getKey();
+		final String key = jobKey.getName() + "@" + jobKey.getGroup();
 
-			MethodInvocation methodInvocation = null;
+		ReentrantLock lock = null;
+		MethodInvocation methodInvocation = null;
+		boolean autoSkip = false;
+		boolean autoLock = true;
+		try {
 			Object method = dataMap.get(DATAKEY_METHOD);
-			if (method instanceof MethodInvocation) {
+			if (method != null && method instanceof MethodInvocation) {
 				methodInvocation = (MethodInvocation) method;
 			}
+			//
+			if (methodInvocation == null) return;
 
-			if (methodInvocation == null) {
-				return;
+			if (dataMap.containsKey(DATAKEY_AUTO_SKIP)) {
+				autoSkip = dataMap.getBooleanValue(DATAKEY_AUTO_SKIP);
+			}
+			//
+			if (runningMap.containsKey(key)) {
+				if (autoSkip) return;
+				//
+				Integer running = runningMap.get(key);
+				runningMap.put(key, running + 1);
+			} else {
+				runningMap.put(key, 0);
 			}
 
-			boolean autoLock = true;
 			if (dataMap.containsKey(DATAKEY_AUTO_LOCK)) {
 				autoLock = dataMap.getBooleanValue(DATAKEY_AUTO_LOCK);
 			}
-
+			//
 			if (autoLock) {
-				JobKey jobKey = jobDetail.getKey();
-				String key = jobKey.getName() + "@" + jobKey.getGroup();
 				lock = lockMap.get(key);
 				if (lock == null) {
 					lock = new ReentrantLock();
 					lockMap.put(key, lock);
 				}
-			}
-
-			if (lock != null) {
 				lock.lock();
 			}
 
@@ -61,6 +72,14 @@ public  class ScheduledJob implements Job {
 		} finally {
 			if (lock != null) {
 				lock.unlock();
+			}
+			if (runningMap.containsKey(key)) {
+				Integer running = runningMap.get(key);
+				if (running == 0) {
+					runningMap.remove(key);
+				} else {
+					runningMap.put(key, running - 1);
+				}
 			}
 		}
 	}
