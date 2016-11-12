@@ -5,9 +5,22 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.apache.http.HttpHost;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.ssl.SSLContexts;
+
+import javax.net.ssl.SSLContext;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * HttpClientConnectionManager Provider
@@ -27,7 +40,22 @@ public class HttpClientConnectionManagerProvider implements Provider<HttpClientC
 			return connectionManager;
 		}
 
-		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager();
+		Registry<ConnectionSocketFactory> socketFactoryRegistry = null;
+		try {
+			final SSLContext sslContext = SSLContexts.custom()
+					.loadTrustMaterial(null, new TrustSelfSignedStrategy())
+					.build();
+			final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+					sslContext, NoopHostnameVerifier.INSTANCE);
+			socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+					.register("http", PlainConnectionSocketFactory.getSocketFactory())
+					.register("https", sslsf)
+					.build();
+		} catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
+			e.printStackTrace();
+		}
+
+		PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
 		// Increase max total connection to 200
 		cm.setMaxTotal(config.getConnectionMaxTotal());
 		// Increase default max connection per route to 20
